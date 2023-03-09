@@ -1,0 +1,46 @@
+version: "3"
+
+
+services:
+  db:
+    container_name: db_videoplatform
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: videoplatform
+      PGDATA: /data/postgresc
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: always
+
+  user_service:
+    build:
+      context: .
+      dockerfile: user_service/Dockerfile
+    ports:
+      - "5000:5000"
+    entrypoint: /user_service_entrypoint.sh
+    volumes:
+      - ./user_service:/app/user_service
+    depends_on:
+      db:
+        condition: service_started
+
+  video_service:
+    build:
+      context: .
+      dockerfile: video_service/Dockerfile
+    ports:
+      - "5100:5100"
+    entrypoint: /video_service_entrypoint.sh
+    volumes:
+      - ./video_service:/app/video_service
+    depends_on:
+      db:
+        condition: service_started
+
+volumes:
+  postgres:
