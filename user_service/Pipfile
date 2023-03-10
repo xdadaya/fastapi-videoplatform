@@ -11,6 +11,8 @@ alembic = "*"
 sqlmodel = "*"
 asyncpg = "*"
 passlib = "*"
+sqlalchemy = "*"
+pyjwt = "*"
 
 [dev-packages]
 
