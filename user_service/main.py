@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 
 from database import db
-from middleware import verify_token
-from views import api
+from api.views import api
 
 
 db.init()
@@ -17,8 +16,6 @@ async def startup():
 @app.on_event("shutdown")
 async def shutdown():
     await db.close()
-
-app.middleware("http")(verify_token)
 
 
 app.include_router(api, prefix="/api/v1")
