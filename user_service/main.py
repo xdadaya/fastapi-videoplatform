@@ -1,21 +1,9 @@
 from fastapi import FastAPI
 
-from database import db
 from api.views import api
+from database.db import create_models
+from services.base_middleware import make_middleware
 
-
-db.init()
-app = FastAPI(title="Users App", description="Handling Our Users", version="1")
-
-
-@app.on_event("startup")
-async def startup():
-    await db.create_all()
-
-
-@app.on_event("shutdown")
-async def shutdown():
-    await db.close()
-
-
+app = FastAPI(title="Users App", middleware=make_middleware())
 app.include_router(api, prefix="/api/v1")
+app.add_event_handler("startup", create_models)

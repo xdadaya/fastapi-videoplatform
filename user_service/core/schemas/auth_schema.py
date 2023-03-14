@@ -5,6 +5,10 @@ class UserSchema(BaseModel):
     username: str
 
 
+class UserCreateSchema(UserSchema):
+    password: str
+
+
 class UserRegisterRequest(UserSchema):
     password: str
     repeat_password: str

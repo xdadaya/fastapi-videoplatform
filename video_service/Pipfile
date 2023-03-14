@@ -6,6 +6,12 @@ name = "pypi"
 [packages]
 fastapi = "*"
 uvicorn = "*"
+python-dotenv = "*"
+alembic = "*"
+sqlmodel = "*"
+asyncpg = "*"
+sqlalchemy = "*"
+pyjwt = "*"
 
 [dev-packages]
 
