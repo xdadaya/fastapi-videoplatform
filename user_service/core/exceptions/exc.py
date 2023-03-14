@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
+from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND
 
 
 class BaseHTTPException(HTTPException):
@@ -16,6 +16,7 @@ class UnauthorizedException(BaseHTTPException):
 
 
 class NotFoundException(BaseHTTPException):
+    status_code = HTTP_404_NOT_FOUND
     detail = "Not found"
 
 
