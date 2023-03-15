@@ -13,6 +13,10 @@ asyncpg = "*"
 passlib = "*"
 sqlalchemy = "*"
 pyjwt = "*"
+factory-boy = "*"
+pytest = "*"
+httpx = "*"
+pytest-asyncio = "*"
 
 [dev-packages]
 
