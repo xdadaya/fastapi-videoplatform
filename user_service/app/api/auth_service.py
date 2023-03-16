@@ -29,8 +29,8 @@ class AuthService:
     async def login(cls, user: UserLoginRequest) -> TokenSchema:
         try:
             user_in_db = await UserCRUD.retrieve(username=user.username)
-        except NotFoundException:
-            raise InvalidCredentialsException()
+        except NotFoundException as exc:
+            raise InvalidCredentialsException() from exc
         if cls.pwd_context.verify(user.password, user_in_db.password):
             return TokenSchema(access_token=TokenService.generate_token(user_in_db.id))
         else:
