@@ -12,6 +12,8 @@ sqlmodel = "*"
 asyncpg = "*"
 sqlalchemy = "*"
 pyjwt = "*"
+boto3 = "*"
+python-multipart = "*"
 
 [dev-packages]
 

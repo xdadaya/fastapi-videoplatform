@@ -44,4 +44,4 @@ async def test_delete_user_data(client: AsyncClient, prefix_token: str) -> None:
     response = await client.delete("me", headers={"Authorization": f"{prefix_token} {access_token}"})
     assert response.status_code == 200
     response = await client.get("me", headers={"Authorization": f"{prefix_token} {access_token}"})
-    assert response.status_code == 400
+    assert response.status_code == 404
