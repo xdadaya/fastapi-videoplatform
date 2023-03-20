@@ -23,5 +23,5 @@ class S3Service:
         session = boto3.session.Session(aws_access_key_id=cls.settings.AWS_ACCESS_KEY,
                                         aws_secret_access_key=cls.settings.AWS_SECRET_ACCESS_KEY)
         s3 = session.resource('s3')
-        file_key = file_url[-36:]
+        file_key = file_url.replace(cls.settings.aws_s3_bucket_file_url, "")
         s3.Object(cls.settings.AWS_S3_BUCKET_NAME, file_key).delete()
