@@ -33,7 +33,7 @@ class CommentListResponse(BaseModel):
     page_number: int
     page_size: int
     total_pages: int
-    content: List[CommentSerializer]
+    items: List[CommentSerializer]
 
 
 class ReactionTypeSchema(BaseModel):

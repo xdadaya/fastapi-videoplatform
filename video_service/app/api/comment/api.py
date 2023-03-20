@@ -10,12 +10,6 @@ from app.services.middleware import verify_token, is_comment_owner
 api = APIRouter(prefix="/comments", )
 
 
-@api.get("/{video_id}", response_model=CommentListResponse)
-async def get_comments_by_video_id(video_id: UUID, page: int = 1, limit: int = 10,
-                                   sort: str = Query(None, alias="sort")) -> CommentListResponse:
-    return await CommentService.list_by_video_id(video_id, page, limit, sort)
-
-
 @api.put("/{comment_id}", response_model=CommentSerializer, dependencies=[Depends(is_comment_owner)])
 async def update_comment(comment_id: UUID, comment: CommentCreateRequest) -> CommentSerializer:
     return await CommentService.update(comment_id, comment)

@@ -1,4 +1,5 @@
 from uuid import UUID, uuid4
+from math import ceil
 
 from app.api.comment.schemas import CommentCreateRequest, CommentCreateSchema, CommentSerializer, ReactionTypeSchema,\
     ReactionCreateSchema, CommentListResponse
@@ -18,7 +19,10 @@ class CommentService:
 
     @staticmethod
     async def list_by_video_id(video_id: UUID, page: int, limit: int, sort: str) -> CommentListResponse:
-        return await CommentCRUD.custom_list_items(page=page, limit=limit, sort=sort, video_id=video_id)
+        count = await CommentCRUD.count_query(video_id=video_id)
+        total_pages = ceil(count / limit)
+        result = await CommentCRUD.list_items_with_pagination(page=page, limit=limit, sort=sort, video_id=video_id)
+        return CommentListResponse(page_number=page, page_size=limit, total_pages=total_pages, items=result)
 
     @staticmethod
     async def update(comment_id: UUID, comment: CommentCreateRequest) -> CommentSerializer:
