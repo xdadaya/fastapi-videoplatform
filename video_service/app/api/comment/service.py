@@ -1,12 +1,11 @@
 from uuid import UUID, uuid4
 
 from app.api.comment.schemas import CommentCreateRequest, CommentCreateSchema, CommentSerializer, ReactionTypeSchema,\
-    ReactionCreateSchema
+    ReactionCreateSchema, CommentListResponse
 from app.core.crud.comment_crud import CommentCRUD
 from app.core.crud.comment_reaction_crud import CommentReactionCRUD
 from app.database.models.enums.reaction_type_enum import ReactionType
 from app.core.exceptions.exc import NotFoundException
-from typing import List
 
 
 class CommentService:
@@ -18,8 +17,8 @@ class CommentService:
         return await CommentCRUD.retrieve(id=comment_id)
 
     @staticmethod
-    async def list_by_video_id(video_id: UUID) -> List[CommentSerializer]:
-        return await CommentCRUD.list_items(video_id=video_id)
+    async def list_by_video_id(video_id: UUID, page: int, limit: int, sort: str) -> CommentListResponse:
+        return await CommentCRUD.custom_list_items(page=page, limit=limit, sort=sort, video_id=video_id)
 
     @staticmethod
     async def update(comment_id: UUID, comment: CommentCreateRequest) -> CommentSerializer:

@@ -1,4 +1,6 @@
+from datetime import datetime
 from uuid import UUID
+from typing import List
 
 from pydantic import BaseModel
 
@@ -20,9 +22,18 @@ class CommentSerializer(BaseModel):
     video_id: UUID
     likes_amount: int
     dislikes_amount: int
+    rating: int
+    created_at: datetime
 
     class Config:
         orm_mode = True
+
+
+class CommentListResponse(BaseModel):
+    page_number: int
+    page_size: int
+    total_pages: int
+    content: List[CommentSerializer]
 
 
 class ReactionTypeSchema(BaseModel):

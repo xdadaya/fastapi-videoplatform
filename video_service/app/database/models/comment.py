@@ -1,7 +1,8 @@
 from uuid import uuid4
 
-from sqlalchemy import Column, String, select, func, ForeignKey
+from sqlalchemy import Column, String, select, func, ForeignKey, Integer
 from sqlalchemy.orm import column_property, selectinload
+from sqlalchemy.sql.expression import cast
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database.db import Base
@@ -29,3 +30,4 @@ class Comment(Base, ExtraFields):
             .options(selectinload(f"comments.c.reactions"))
             .scalar_subquery()
     )
+    rating = column_property(cast(likes_amount, Integer) - cast(dislikes_amount, Integer))
