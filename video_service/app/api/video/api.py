@@ -6,7 +6,7 @@ from app.api.video.schemas import VideoCreateRequest, VideoSerializer, VideoUpda
 from app.api.comment.schemas import CommentCreateRequest, CommentSerializer, CommentListResponse
 from app.api.video.service import VideoService
 from app.api.comment.service import CommentService
-from app.services.middleware import verify_token, is_video_owner
+from app.core.fastapi.middleware.middleware import verify_token, is_video_owner
 
 
 api = APIRouter(prefix="/videos", )

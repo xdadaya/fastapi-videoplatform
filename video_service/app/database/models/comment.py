@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from sqlalchemy import Column, String, select, func, ForeignKey, Integer
-from sqlalchemy.orm import column_property, selectinload
+from sqlalchemy.orm import column_property, joinedload
 from sqlalchemy.sql.expression import cast
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -21,13 +21,13 @@ class Comment(Base, ExtraFields):
     likes_amount = column_property(
         select(func.count(CommentReaction.id))
             .where(CommentReaction.comment_id == id, CommentReaction.reaction_type == ReactionType.LIKE)
-            .options(selectinload(f"comments.c.reactions"))
+            .options(joinedload(f"comments.c.reactions"))
             .scalar_subquery()
     )
     dislikes_amount = column_property(
         select(func.count(CommentReaction.id))
             .where(CommentReaction.comment_id == id, CommentReaction.reaction_type == ReactionType.DISLIKE)
-            .options(selectinload(f"comments.c.reactions"))
+            .options(joinedload(f"comments.c.reactions"))
             .scalar_subquery()
     )
     rating = column_property(cast(likes_amount, Integer) - cast(dislikes_amount, Integer))

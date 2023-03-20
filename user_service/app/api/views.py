@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from passlib.context import CryptContext
 from app.core.schemas.auth_schema import UserRegisterRequest, UserLoginRequest, TokenSchema, UserSchema
 from app.core.schemas.user_schema import UserSerializer
-from app.services.middleware import verify_token
+from app.core.fastapi.middleware.middleware import verify_token
 from app.api.auth_service import AuthService
 from app.api.user_service import UserService
 

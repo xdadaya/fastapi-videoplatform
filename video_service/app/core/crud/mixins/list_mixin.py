@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import select, and_, func, desc
+from sqlalchemy import select, and_, func, desc, text
 
 from app.core.crud.mixins.base_mixin import BaseMixin, TableType
 from app.core.schemas.search_schema import SearchSchema
@@ -20,9 +20,9 @@ class ListMixin(BaseMixin):
         if sort:
             if sort[0] == "-":
                 sort = sort[1:]
-                query = query.order_by(desc(sort))
+                query = query.order_by(desc(text(sort)))
             else:
-                query = query.order_by(sort)
+                query = query.order_by(text(sort))
         return query
 
     @classmethod

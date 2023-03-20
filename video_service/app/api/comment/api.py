@@ -1,11 +1,10 @@
-from typing import List
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends
 
-from app.api.comment.schemas import CommentCreateRequest, CommentSerializer, CommentListResponse
+from app.api.comment.schemas import CommentCreateRequest, CommentSerializer
 from app.api.comment.service import CommentService
-from app.services.middleware import verify_token, is_comment_owner
+from app.core.fastapi.middleware.middleware import verify_token, is_comment_owner
 
 api = APIRouter(prefix="/comments", )
 

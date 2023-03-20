@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from app.api.views import api
 from app.database.db import create_models
-from app.services.base_middleware import make_middleware
+from app.core.fastapi.middleware.base_middleware import make_middleware
 
 app = FastAPI(title="Users App", middleware=make_middleware())
 app.include_router(api, prefix="/api/v1")

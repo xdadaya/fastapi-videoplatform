@@ -3,7 +3,7 @@ from typing import Generic, TypeVar, Union
 from sqlalchemy import and_
 from sqlalchemy.sql import expression
 
-from app.core.exceptions.exc import NotFoundException
+from app.core.fastapi.exceptions import NotFoundException
 
 TableType = TypeVar("TableType")
 

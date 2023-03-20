@@ -1,7 +1,7 @@
 from app.core.crud.base_crud import BaseCRUD
 from app.database.models.category import Category
 from app.api.video.schemas import CategoryCreateSchema
-from app.core.exceptions.exc import NotFoundException
+from app.core.fastapi.exceptions import NotFoundException
 
 
 class CategoryCRUD(BaseCRUD):

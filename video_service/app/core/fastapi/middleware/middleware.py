@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import Request
 
-from app.core.exceptions.exc import InvalidCredentialsException, NotOwnerException
+from app.core.fastapi.exceptions import InvalidCredentialsException, NotOwnerException
 from app.services.token_service import TokenService
 from app.core.crud.video_crud import VideoCRUD
 from app.core.crud.comment_crud import CommentCRUD
