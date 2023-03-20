@@ -13,10 +13,10 @@ class CommentCRUD(BaseCRUD):
 
     @classmethod
     @Transactional(propagation=Propagation.REQUIRED)
-    async def custom_list_items(cls, page, limit, sort, **kwargs) -> None:
+    async def custom_list_items(cls, page, limit, sort, **kwargs) -> CommentListResponse:
         query = cls.filter_query(query=select(cls.Table), kwargs=kwargs)
-
         if sort:
+            sort = sort.replace("rating", "anon_3")
             if sort[0] == "-":
                 sort = sort[1:]
                 query = query.order_by(desc(sort))
