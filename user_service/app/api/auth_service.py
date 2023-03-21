@@ -1,7 +1,7 @@
 from passlib.context import CryptContext
 
 from app.core.crud.user_crud import UserCRUD
-from app.core.exceptions.exc import PasswordDoNotMatchException, DuplicatedUserException, NotFoundException, \
+from app.core.fastapi.exceptions import PasswordDoNotMatchException, DuplicatedUserException, NotFoundException, \
     InvalidCredentialsException
 from app.core.schemas.auth_schema import UserRegisterRequest, UserLoginRequest, UserCreateSchema, TokenSchema
 from app.core.schemas.user_schema import UserSerializer

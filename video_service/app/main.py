@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.database.db import create_models
-from app.services.base_middleware import make_middleware
+from app.core.fastapi.middleware.base_middleware import make_middleware
 from app.api.api import api
 
 

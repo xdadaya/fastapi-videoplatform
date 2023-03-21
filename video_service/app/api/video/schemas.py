@@ -46,3 +46,10 @@ class VideoSerializer(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class VideoListResponse(BaseModel):
+    page_number: int
+    page_size: int
+    total_pages: int
+    items: list[VideoSerializer]

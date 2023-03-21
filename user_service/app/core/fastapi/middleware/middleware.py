@@ -3,7 +3,7 @@ from uuid import UUID
 from fastapi import Request
 
 from app.core.crud.user_crud import UserCRUD
-from app.core.exceptions.exc import InvalidCredentialsException
+from app.core.fastapi.exceptions import InvalidCredentialsException
 from app.services.token_service import TokenService
 
 

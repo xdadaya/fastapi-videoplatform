@@ -1,18 +1,19 @@
 from uuid import UUID
-from typing import List
 
 from fastapi import APIRouter, Depends
-from app.api.video.schemas import VideoCreateRequest, VideoSerializer, VideoUpdateRequest
+from app.api.video.schemas import VideoCreateRequest, VideoSerializer, VideoUpdateRequest, VideoListResponse
+from app.api.comment.schemas import CommentCreateRequest, CommentSerializer, CommentListResponse
 from app.api.video.service import VideoService
-from app.services.middleware import verify_token, is_video_owner
+from app.api.comment.service import CommentService
+from app.core.fastapi.middleware.middleware import verify_token, is_video_owner
 
 
 api = APIRouter(prefix="/videos", )
 
 
-@api.get("/", response_model=List[VideoSerializer])
-async def get_all_videos() -> List[VideoSerializer]:
-    return await VideoService.list()
+@api.get("/", response_model=VideoListResponse)
+async def get_all_videos(page: int = 1, limit: int = 10) -> VideoListResponse:
+    return await VideoService.pagination_list(page=page, limit=limit)
 
 
 @api.get("/{video_id}", response_model=VideoSerializer)
@@ -33,3 +34,14 @@ async def update_video(video_id: UUID, video: VideoUpdateRequest) -> VideoSerial
 @api.delete("/{video_id}", dependencies=[Depends(is_video_owner)])
 async def delete_video(video_id: UUID) -> None:
     await VideoService.delete(video_id)
+
+
+@api.post("/{video_id}/comment", response_model=CommentSerializer)
+async def create_comment(video_id: UUID, comment: CommentCreateRequest, user_id: UUID = Depends(verify_token)) -> CommentSerializer:
+    return await CommentService.create(video_id, user_id, comment)
+
+
+@api.get("/{video_id}/comments", response_model=CommentListResponse)
+async def get_comments_by_video_id(video_id: UUID, page: int = 1, limit: int = 10,
+                                   sort: str = None) -> CommentListResponse:
+    return await CommentService.list_by_video_id(video_id, page, limit, sort)

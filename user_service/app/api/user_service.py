@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from app.core.crud.user_crud import UserCRUD
-from app.core.exceptions.exc import DuplicatedUserException, NotFoundException
+from app.core.fastapi.exceptions import DuplicatedUserException, NotFoundException
 from app.core.schemas.auth_schema import UserSchema
 from app.core.schemas.user_schema import UserSerializer
 
