@@ -1,6 +1,5 @@
 from datetime import datetime
 from uuid import UUID
-from typing import List
 
 from pydantic import BaseModel
 
@@ -33,7 +32,7 @@ class CommentListResponse(BaseModel):
     page_number: int
     page_size: int
     total_pages: int
-    items: List[CommentSerializer]
+    items: list[CommentSerializer]
 
 
 class ReactionTypeSchema(BaseModel):

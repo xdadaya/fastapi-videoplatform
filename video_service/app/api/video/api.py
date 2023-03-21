@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends
 from app.api.video.schemas import VideoCreateRequest, VideoSerializer, VideoUpdateRequest, VideoListResponse
 from app.api.comment.schemas import CommentCreateRequest, CommentSerializer, CommentListResponse
 from app.api.video.service import VideoService
@@ -43,5 +43,5 @@ async def create_comment(video_id: UUID, comment: CommentCreateRequest, user_id:
 
 @api.get("/{video_id}/comments", response_model=CommentListResponse)
 async def get_comments_by_video_id(video_id: UUID, page: int = 1, limit: int = 10,
-                                   sort: str = Query(None, alias="sort")) -> CommentListResponse:
+                                   sort: str = None) -> CommentListResponse:
     return await CommentService.list_by_video_id(video_id, page, limit, sort)
