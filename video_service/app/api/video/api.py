@@ -1,8 +1,7 @@
 from uuid import UUID
-from typing import List
 
 from fastapi import APIRouter, Depends, Query
-from app.api.video.schemas import VideoCreateRequest, VideoSerializer, VideoUpdateRequest
+from app.api.video.schemas import VideoCreateRequest, VideoSerializer, VideoUpdateRequest, VideoListResponse
 from app.api.comment.schemas import CommentCreateRequest, CommentSerializer, CommentListResponse
 from app.api.video.service import VideoService
 from app.api.comment.service import CommentService
@@ -12,9 +11,9 @@ from app.core.fastapi.middleware.middleware import verify_token, is_video_owner
 api = APIRouter(prefix="/videos", )
 
 
-@api.get("/", response_model=List[VideoSerializer])
-async def get_all_videos() -> List[VideoSerializer]:
-    return await VideoService.list()
+@api.get("/", response_model=VideoListResponse)
+async def get_all_videos(page: int = 1, limit: int = 10) -> VideoListResponse:
+    return await VideoService.pagination_list(page=page, limit=limit)
 
 
 @api.get("/{video_id}", response_model=VideoSerializer)

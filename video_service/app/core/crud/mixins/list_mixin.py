@@ -26,7 +26,7 @@ class ListMixin(BaseMixin):
         return query
 
     @classmethod
-    async def list_items_with_pagination(cls, page: int, limit: int, sort: str, **kwargs) -> list[TableType]:
+    async def list_items_with_pagination(cls, page: int, limit: int, sort: str = None, **kwargs) -> list[TableType]:
         query = cls.sort_items(sort, **kwargs)
         offset_page = page - 1
         query = (query.offset(offset_page * limit).limit(limit))

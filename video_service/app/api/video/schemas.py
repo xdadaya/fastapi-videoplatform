@@ -1,3 +1,4 @@
+from typing import List
 from uuid import UUID
 
 from fastapi import File
@@ -46,3 +47,10 @@ class VideoSerializer(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class VideoListResponse(BaseModel):
+    page_number: int
+    page_size: int
+    total_pages: int
+    items: List[VideoSerializer]

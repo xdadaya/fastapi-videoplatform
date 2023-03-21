@@ -1,10 +1,11 @@
+from math import ceil
 from typing import List
 from uuid import UUID, uuid4
 
-from app.core.crud.video_crud import VideoCRUD
-from app.core.crud.category_crud import CategoryCRUD
 from app.api.video.schemas import VideoSerializer, VideoCreateSchema, VideoCreateRequest, VideoUpdateRequest, \
-    VideoUpdateSchema
+    VideoUpdateSchema, VideoListResponse
+from app.core.crud.category_crud import CategoryCRUD
+from app.core.crud.video_crud import VideoCRUD
 from app.services.s3_service import S3Service
 
 
@@ -12,6 +13,13 @@ class VideoService:
     @staticmethod
     async def list() -> List[VideoSerializer]:
         return await VideoCRUD.list_items()
+
+    @staticmethod
+    async def pagination_list(page: int, limit: int) -> VideoListResponse:
+        count = await VideoCRUD.count_query()
+        total_pages = ceil(count / limit)
+        result = await VideoCRUD.list_items_with_pagination(page=page, limit=limit)
+        return VideoListResponse(page_number=page, page_size=limit, total_pages=total_pages, items=result)
 
     @staticmethod
     async def retrieve(video_id: UUID) -> VideoSerializer:
