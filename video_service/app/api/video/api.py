@@ -21,7 +21,7 @@ async def get_video_by_id(video_id: UUID) -> VideoSerializer:
     return await VideoService.retrieve(video_id)
 
 
-@api.post("/", response_model=VideoSerializer)
+@api.post("/", response_model=VideoSerializer, status_code=201)
 async def post_video(video_data: VideoCreateRequest, user_id: UUID = Depends(verify_token),) -> VideoSerializer:
     return await VideoService.create(video_data, user_id)
 
@@ -36,7 +36,7 @@ async def delete_video(video_id: UUID) -> None:
     await VideoService.delete(video_id)
 
 
-@api.post("/{video_id}/comment", response_model=CommentSerializer)
+@api.post("/{video_id}/comment", response_model=CommentSerializer, status_code=201)
 async def create_comment(video_id: UUID, comment: CommentCreateRequest, user_id: UUID = Depends(verify_token)) -> CommentSerializer:
     return await CommentService.create(video_id, user_id, comment)
 

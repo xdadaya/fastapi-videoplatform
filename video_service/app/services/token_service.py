@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from uuid import UUID
 
 import jwt
@@ -19,3 +20,12 @@ class TokenService:
         except Exception:
             raise HTTPException(status_code=403, detail='Authentication error. Unable to decode token')
         return UUID(payload["id"])
+
+    @staticmethod
+    def generate_token(user_id: UUID) -> str:
+        expires_at = datetime.now() + timedelta(minutes=settings.TOKEN_EXPIRE_MINUTES)
+        token = jwt.encode({
+            'id': str(user_id),
+            'exp': expires_at
+        }, settings.SECRET_KEY, algorithm=settings.HASH_ALGORITHM)
+        return token

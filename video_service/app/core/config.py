@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     @property
     def aws_s3_bucket_file_url(self) -> str:
         return f"https://s3-{self.AWS_S3_REGION}.amazonaws.com/{self.AWS_S3_BUCKET_NAME}/"
+
     class Config:
         if "pytest" in sys.modules:
             env_file = '.env.test'
