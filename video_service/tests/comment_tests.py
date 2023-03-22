@@ -89,12 +89,14 @@ async def test_like_comment(client: AsyncClient, owner_access_token: str, viewer
     await client.post(f"comments/{comment_id}/like", headers={"Authorization": owner_access_token})
     await client.post(f"comments/{comment_id}/like", headers={"Authorization": viewer_access_token})
     response = await client.get(f"videos/{video_id}/comments")
-    assert response.json()["items"][0]["likes_amount"] == 2
-    assert response.json()["items"][0]["rating"] == 2
+    first_comment = response.json()["items"][0]
+    assert first_comment["likes_amount"] == 2
+    assert first_comment["rating"] == 2
     await client.delete(f"comments/{comment_id}/unlike", headers={"Authorization": viewer_access_token})
     response = await client.get(f"videos/{video_id}/comments")
-    assert response.json()["items"][0]["likes_amount"] == 1
-    assert response.json()["items"][0]["rating"] == 1
+    first_comment = response.json()["items"][0]
+    assert first_comment["likes_amount"] == 1
+    assert first_comment["rating"] == 1
 
 
 @pytest.mark.asyncio
@@ -109,16 +111,19 @@ async def test_dislike_comment(client: AsyncClient, owner_access_token: str, vie
     await client.post(f"comments/{comment_id}/dislike", headers={"Authorization": owner_access_token})
     await client.post(f"comments/{comment_id}/dislike", headers={"Authorization": viewer_access_token})
     response = await client.get(f"videos/{video_id}/comments")
-    assert response.json()["items"][0]["dislikes_amount"] == 2
-    assert response.json()["items"][0]["rating"] == -2
+    first_comment = response.json()["items"][0]
+    assert first_comment["dislikes_amount"] == 2
+    assert first_comment["rating"] == -2
 
     await client.delete(f"comments/{comment_id}/unlike", headers={"Authorization": viewer_access_token})
     response = await client.get(f"videos/{video_id}/comments")
-    assert response.json()["items"][0]["dislikes_amount"] == 1
-    assert response.json()["items"][0]["rating"] == -1
+    first_comment = response.json()["items"][0]
+    assert first_comment["dislikes_amount"] == 1
+    assert first_comment["rating"] == -1
 
     await client.post(f"comments/{comment_id}/like", headers={"Authorization": owner_access_token})
     response = await client.get(f"videos/{video_id}/comments")
-    assert response.json()["items"][0]["likes_amount"] == 1
-    assert response.json()["items"][0]["dislikes_amount"] == 0
-    assert response.json()["items"][0]["rating"] == 1
+    first_comment = response.json()["items"][0]
+    assert first_comment["likes_amount"] == 1
+    assert first_comment["dislikes_amount"] == 0
+    assert first_comment["rating"] == 1
