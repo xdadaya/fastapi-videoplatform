@@ -14,19 +14,13 @@ from app.services.s3_service import S3Service
 settings = get_settings()
 
 
-class OverrideS3Service:
-    settings = get_settings()
-
-    @classmethod
-    def upload_video(cls, video: bytes) -> str:
-        return "testurl"
-
-    @classmethod
-    def delete_video(cls, file_url: str) -> None:
-        pass
+def upload_video_mock(video: bytes) -> str:
+    return "testurl"
 
 
-app.dependency_overrides[S3Service] = OverrideS3Service
+@pytest.fixture(scope="function", autouse=True)
+def change_upload_video(monkeypatch) -> None:
+    monkeypatch.setattr(S3Service, "upload_video", upload_video_mock)
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -38,15 +32,8 @@ def event_loop() -> asyncio.AbstractEventLoop:
 
 
 @pytest.fixture(scope='session')
-def videos_client() -> AsyncClient:
-    app.dependency_overrides[S3Service] = OverrideS3Service
-    client = AsyncClient(app=app, base_url='http://localhost:5000/api/v1/videos/')
-    return client
-
-
-@pytest.fixture(scope='session')
-def comments_client() -> AsyncClient:
-    client = AsyncClient(app=app, base_url='http://localhost:5000/api/v1/comments/')
+def client() -> AsyncClient:
+    client = AsyncClient(app=app, base_url='http://localhost:5000/api/v1/')
     return client
 
 

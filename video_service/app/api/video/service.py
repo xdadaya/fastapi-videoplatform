@@ -7,10 +7,6 @@ from app.api.video.schemas import VideoSerializer, VideoCreateSchema, VideoCreat
 from app.core.crud.category_crud import CategoryCRUD
 from app.core.crud.video_crud import VideoCRUD
 from app.services.s3_service import S3Service
-from app.core.config import get_settings
-
-
-settings = get_settings()
 
 
 class VideoService:
@@ -31,7 +27,7 @@ class VideoService:
 
     @staticmethod
     async def create(video_data: VideoCreateRequest, user_id: UUID) -> VideoSerializer:
-        video_url = S3Service.upload_video(video_data.video) if not settings.is_test else "testurl"
+        video_url = S3Service.upload_video(video_data.video)
         video_id = uuid4()
         category = await CategoryCRUD.get_or_create(name=video_data.category)
         video = VideoCreateSchema(id=video_id, title=video_data.title, description=video_data.description,
