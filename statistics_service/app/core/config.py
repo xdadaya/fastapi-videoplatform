@@ -8,7 +8,6 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_PORT: int
     DB_NAME: str
-    DB_NAME: str
     DB_STATISTICS_COLLECTION: str
 
     @property
