@@ -8,6 +8,7 @@ fastapi = "*"
 uvicorn = "*"
 motor = "*"
 pydantic = {extras = ["dotenv"], version = "*"}
+celery = "*"
 
 [dev-packages]
 

@@ -26,6 +26,17 @@ services:
     ports:
       - "27017:27017"
 
+  rabbitmq:
+    container_name: rabbitmq
+    image: public.ecr.aws/docker/library/rabbitmq:3
+    ports:
+      - "5672:5672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 15s
+      timeout: 15s
+      retries: 10
+
   user_service:
     build:
       context: .
@@ -64,6 +75,19 @@ services:
     depends_on:
       mongo:
         condition: service_started
+
+  celery:
+    container_name: celery
+    build:
+      context: .
+      dockerfile: statistics_service/Dockerfile
+    entrypoint: /celery_entrypoint.sh
+    depends_on:
+      statistics_service:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+
 
 volumes:
   postgres:
