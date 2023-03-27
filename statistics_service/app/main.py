@@ -4,8 +4,8 @@ from fastapi import FastAPI, Depends, HTTPException
 from app.database.db_utils import connect, close_connection
 from app.database.db import get_database
 
-from app.database.models.user_statistics import UserStatisticsBaseScheme, UserStatisticsDBScheme, \
-    UserStatisticsCreateScheme, UserStatisticsUpdateScheme
+from app.database.models.user_statistics import UserStatisticsDBScheme, UserStatisticsCreateScheme, \
+    UserStatisticsUpdateScheme
 from app.core.crud.user_statistics_crud import UserStatisticsCRUD
 
 

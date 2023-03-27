@@ -1,11 +1,11 @@
 from passlib.context import CryptContext
-
 from app.core.crud.user_crud import UserCRUD
 from app.core.fastapi.exceptions import PasswordDoNotMatchException, DuplicatedUserException, NotFoundException, \
     InvalidCredentialsException
 from app.core.schemas.auth_schema import UserRegisterRequest, UserLoginRequest, UserCreateSchema, TokenSchema
 from app.core.schemas.user_schema import UserSerializer
 from app.services.token_service import TokenService
+from app.producer import publish
 
 
 class AuthService:
@@ -23,7 +23,10 @@ class AuthService:
             user_dict = user.dict()
             user_dict.pop("repeat_password")
             await UserCRUD.create(UserCreateSchema(**user_dict))
-            return await UserCRUD.retrieve(username=user.username)
+            user = await UserCRUD.retrieve(username=user.username)
+            data = {'user_id': str(user.id)}
+            await publish(send_method="create_stats", data=data)
+            return user
 
     @classmethod
     async def login(cls, user: UserLoginRequest) -> TokenSchema:

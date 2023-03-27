@@ -76,18 +76,19 @@ services:
       mongo:
         condition: service_started
 
-  celery:
-    container_name: celery
+  consumer:
     build:
       context: .
       dockerfile: statistics_service/Dockerfile
-    entrypoint: /celery_entrypoint.sh
+    entrypoint: /consumer_entrypoint.sh
+    command: bash -c "ls && cd app && ls"
+    volumes:
+      - ./statistics_service:/app/statistics_service
     depends_on:
-      statistics_service:
-        condition: service_started
       rabbitmq:
         condition: service_healthy
-
+      statistics_service:
+        condition: service_started
 
 volumes:
   postgres:
