@@ -16,6 +16,16 @@ services:
       - "5432:5432"
     restart: always
 
+  mongo:
+    container_name: mongodb
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=video_statistics
+    ports:
+      - "27017:27017"
+
   user_service:
     build:
       context: .
@@ -40,6 +50,19 @@ services:
       - ./video_service:/app/video_service
     depends_on:
       db:
+        condition: service_started
+
+  statistics_service:
+    build:
+      context: .
+      dockerfile: statistics_service/Dockerfile
+    ports:
+      - "5200:5200"
+    entrypoint: /statistics_service_entrypoint.sh
+    volumes:
+      - ./statistics_service:/app/statistics_service
+    depends_on:
+      mongo:
         condition: service_started
 
 volumes:
