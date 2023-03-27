@@ -27,9 +27,9 @@ class CRUDMixin:
         return result
 
     @classmethod
-    async def update(cls, conn: AsyncIOMotorClient, _id: OID, **kwargs) -> None:
-        await conn[cls.db_name][cls.Collection].update_one({"_id": _id}, {"$set": kwargs})
+    async def update(cls, conn: AsyncIOMotorClient, filter: dict[Any, Any], **kwargs) -> None:
+        await conn[cls.db_name][cls.Collection].update_one(filter, {"$set": kwargs})
 
     @classmethod
-    async def delete(cls, conn: AsyncIOMotorClient, _id: OID) -> None:
-        await conn[cls.db_name][cls.Collection].delete_one({"_id": _id})
+    async def delete(cls, conn: AsyncIOMotorClient, **kwargs) -> None:
+        await conn[cls.db_name][cls.Collection].delete_one(kwargs)
