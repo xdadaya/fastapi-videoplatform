@@ -81,7 +81,6 @@ services:
       context: .
       dockerfile: statistics_service/Dockerfile
     entrypoint: /consumer_entrypoint.sh
-    command: bash -c "ls && cd app && ls"
     volumes:
       - ./statistics_service:/app/statistics_service
     depends_on:

@@ -6,7 +6,10 @@ from app.api.video.schemas import VideoSerializer, VideoCreateSchema, VideoCreat
     VideoUpdateSchema, VideoListResponse
 from app.core.crud.category_crud import CategoryCRUD
 from app.core.crud.video_crud import VideoCRUD
+from app.core.crud.comment_crud import CommentCRUD
+from app.core.crud.comment_reaction_crud import CommentReactionCRUD
 from app.services.s3_service import S3Service
+from app.producer import publish
 
 
 class VideoService:
@@ -33,6 +36,8 @@ class VideoService:
         video = VideoCreateSchema(id=video_id, title=video_data.title, description=video_data.description,
                                   video_url=video_url, owner_id=user_id, category_id=category.id)
         await VideoCRUD.create(video)
+        data = {'user_id': str(user_id), "videos_amount": 1}
+        await publish(send_method="update_stats", data=data)
         return await VideoCRUD.retrieve(id=video_id)
 
     @staticmethod
@@ -46,4 +51,21 @@ class VideoService:
     async def delete(video_id: UUID) -> None:
         video = await VideoCRUD.retrieve(id=video_id)
         S3Service.delete_video(video.video_url)
+        user_id = video.owner_id
+        comments_amount_by_video_id = await CommentCRUD.count_query(video_id=video_id)
+        comments_amount, total_text_length, total_rating = 0, 0, 0
+        for _ in range(comments_amount_by_video_id):
+            comment = await CommentCRUD.retrieve(video_id=video_id)
+            comments_amount += 1
+            comment_text = comment.text
+            comment_rating = comment.rating
+            comment_id = comment.id
+            total_text_length += len(comment_text)
+            total_rating += comment_rating
+            await CommentReactionCRUD.delete(comment_id=comment_id)
         await VideoCRUD.delete(id=video_id)
+        await CommentCRUD.delete(video_id=video_id)
+        data = {'user_id': str(user_id), "videos_amount": -1, "comments_amount": -comments_amount,
+                "total_text_length": -total_text_length, "total_rating": -total_rating}
+        print(data)
+        await publish(send_method="update_stats", data=data)
