@@ -1,4 +1,5 @@
 import asyncio
+from dotenv import dotenv_values
 
 import aio_pika
 
@@ -7,8 +8,9 @@ from app.services.message_service import MessageService
 
 
 async def main() -> None:
-    connection = await aio_pika.connect_robust("amqp://guest:guest@rabbitmq:5672//")
-    queue_name = "test_queue"
+    config = dotenv_values(".env")
+    connection = await aio_pika.connect_robust(f"amqp://guest:guest@{config['RB_HOST']}:{config['RB_PORT']}//")
+    queue_name = config['RB_QUEUE_NAME']
     await connect()
     async with connection:
         channel = await connection.channel()

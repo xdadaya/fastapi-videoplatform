@@ -3,12 +3,17 @@ from typing import Any
 
 import aio_pika
 
+from app.core.config import get_settings
+
+
+settings = get_settings()
+
 
 async def publish(data: dict[Any, Any], send_method: str) -> None:
-    connection = await aio_pika.connect("amqp://guest:guest@rabbitmq:5672//")
+    connection = await aio_pika.connect(f"amqp://guest:guest@{settings.RB_HOST}:{settings.RB_PORT}//")
 
     async with connection:
-        routing_key = "test_queue"
+        routing_key = settings.RB_QUEUE_NAME
         channel = await connection.channel()
         data = {'method': send_method, 'data': data}
         await channel.default_exchange.publish(

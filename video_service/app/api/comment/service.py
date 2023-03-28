@@ -6,6 +6,7 @@ from app.api.comment.schemas import CommentCreateRequest, CommentCreateSchema, C
 from app.core.crud.comment_crud import CommentCRUD
 from app.core.crud.video_crud import VideoCRUD
 from app.core.crud.comment_reaction_crud import CommentReactionCRUD
+from app.core.schemas.update_statistics_schema import UpdateSchema
 from app.database.models.enums.reaction_type_enum import ReactionType
 from app.core.fastapi.exceptions import NotFoundException
 from app.producer import publish
@@ -19,8 +20,8 @@ class CommentService:
         await CommentCRUD.create(comment)
         comment = await CommentCRUD.retrieve(id=comment_id)
         video = await VideoCRUD.retrieve(id=video_id)
-        data = {"user_id": str(video.owner_id), "comments_amount": 1, "total_text_length": len(comment.text)}
-        await publish(send_method="update_stats", data=data)
+        data = UpdateSchema(user_id=str(video.owner_id), comments_amount=1, total_text_length=len(comment.text))
+        await publish(send_method="update_stats", data=data.dict())
         return comment
 
     @staticmethod
@@ -38,8 +39,8 @@ class CommentService:
         comment = await CommentCRUD.retrieve(id=comment_id)
         new_text_length = len(comment.text)
         video = await VideoCRUD.retrieve(id=comment.video_id)
-        data = {"user_id": str(video.owner_id), "total_text_length": new_text_length - old_text_length}
-        await publish(send_method="update_stats", data=data)
+        data = UpdateSchema(user_id=str(video.owner_id), total_text_length=new_text_length - old_text_length)
+        await publish(send_method="update_stats", data=data.dict())
         return comment
 
     @staticmethod
@@ -47,11 +48,11 @@ class CommentService:
         comment = await CommentCRUD.retrieve(id=comment_id)
         video = await VideoCRUD.retrieve(id=comment.video_id)
         owner_id = video.owner_id
-        data = {'user_id': str(owner_id), "comments_amount": -1,
-                "total_text_length": -len(comment.text), "total_rating": -comment.rating}
+        data = UpdateSchema(user_id=str(owner_id), comments_amount=-1,
+                            total_text_length=-len(comment.text), total_rating=-comment.rating)
         await CommentCRUD.delete(id=comment_id)
         await CommentReactionCRUD.delete(comment_id=comment_id)
-        await publish(send_method="update_stats", data=data)
+        await publish(send_method="update_stats", data=data.dict())
 
     @staticmethod
     async def like(comment_id: UUID, user_id: UUID) -> None:
@@ -68,8 +69,8 @@ class CommentService:
             await CommentReactionCRUD.create(data)
         comment = await CommentCRUD.retrieve(id=comment_id)
         new_rating = comment.rating
-        data = {"user_id": str(owner_id), "total_rating": new_rating - old_rating}
-        await publish(send_method="update_stats", data=data)
+        data = UpdateSchema(user_id=str(owner_id), total_rating=new_rating - old_rating)
+        await publish(send_method="update_stats", data=data.dict())
 
     @staticmethod
     async def dislike(comment_id: UUID, user_id: UUID) -> None:
@@ -86,8 +87,8 @@ class CommentService:
             await CommentReactionCRUD.create(data)
         comment = await CommentCRUD.retrieve(id=comment_id)
         new_rating = comment.rating
-        data = {"user_id": str(owner_id), "total_rating": new_rating - old_rating}
-        await publish(send_method="update_stats", data=data)
+        data = UpdateSchema(user_id=str(owner_id), total_rating=new_rating - old_rating)
+        await publish(send_method="update_stats", data=data.dict())
 
     @staticmethod
     async def unlike(comment_id: UUID, user_id: UUID) -> None:
@@ -99,5 +100,5 @@ class CommentService:
         await CommentReactionCRUD.delete(id=comment_reaction.id)
         comment = await CommentCRUD.retrieve(id=comment_id)
         new_rating = comment.rating
-        data = {"user_id": str(owner_id), "total_rating": new_rating - old_rating}
-        await publish(send_method="update_stats", data=data)
+        data = UpdateSchema(user_id=str(owner_id), total_rating=new_rating - old_rating)
+        await publish(send_method="update_stats", data=data.dict())

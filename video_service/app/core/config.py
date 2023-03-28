@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     AWS_SECRET_ACCESS_KEY: str
     AWS_S3_BUCKET_NAME: str
     AWS_S3_REGION: str
+    RB_HOST: str
+    RB_PORT: int
+    RB_QUEUE_NAME: str
 
     @property
     def database_url(self) -> str:

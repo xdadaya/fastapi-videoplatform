@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_PORT: int
     DB_NAME: str
+    RB_HOST: str
+    RB_PORT: int
+    RB_QUEUE_NAME: str
 
     @property
     def database_url(self):
