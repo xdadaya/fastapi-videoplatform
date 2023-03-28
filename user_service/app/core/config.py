@@ -15,6 +15,15 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_PORT: int
     DB_NAME: str
+    RB_HOST: str
+    RB_PORT: int
+    RB_QUEUE_NAME: str
+    RB_USER: str
+    RB_PASSWORD: str
+
+    @property
+    def broker_url(self):
+        return f"amqp://{self.RB_USER}:{self.RB_PASSWORD}@{self.RB_HOST}:{self.RB_PORT}//"
 
     @property
     def database_url(self):

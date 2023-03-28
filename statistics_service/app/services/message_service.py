@@ -18,4 +18,6 @@ class MessageService:
         elif body.method == "delete_stats":
             await UserStatisticsCRUD.delete(db, user_id=UUID(body.data.user_id))
         elif body.method == "update_stats":
-            pass
+            data = body.data.dict()
+            user_id = UUID(data.pop("user_id"))
+            await UserStatisticsCRUD.update(db, filter={"user_id": user_id}, operator="$inc", **data)

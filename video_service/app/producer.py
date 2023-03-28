@@ -11,6 +11,7 @@ settings = get_settings()
 
 async def publish(data: dict[Any, Any], send_method: str) -> None:
     connection = await aio_pika.connect(settings.broker_url)
+
     async with connection:
         routing_key = settings.RB_QUEUE_NAME
         channel = await connection.channel()
