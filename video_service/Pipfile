@@ -17,6 +17,7 @@ python-multipart = "*"
 pytest = "*"
 httpx = "*"
 pytest-asyncio = "*"
+pika = "*"
 
 [dev-packages]
 

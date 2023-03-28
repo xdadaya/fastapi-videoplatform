@@ -8,6 +8,8 @@ fastapi = "*"
 uvicorn = "*"
 motor = "*"
 pydantic = {extras = ["dotenv"], version = "*"}
+pika = "*"
+aio-pika = "*"
 
 [dev-packages]
 

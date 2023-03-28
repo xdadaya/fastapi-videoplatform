@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     @property
     def database_url(self):
         return f"mongodb://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/"\
-               f"{self.DB_NAME}?authSource=admin"
+               f"{self.DB_NAME}?authSource=admin&uuidRepresentation=standard"
 
     class Config:
         env_file = '.env'

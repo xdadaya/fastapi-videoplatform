@@ -17,6 +17,8 @@ factory-boy = "*"
 pytest = "*"
 httpx = "*"
 pytest-asyncio = "*"
+pika = "*"
+aio-pika = "*"
 
 [dev-packages]
 

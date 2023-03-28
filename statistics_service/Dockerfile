@@ -11,5 +11,6 @@ RUN pip install pipenv && pipenv install --dev --system --deploy
 
 
 COPY statistics_service_entrypoint.sh /statistics_service_entrypoint.sh
-RUN chmod a+x /statistics_service_entrypoint.sh
-RUN dos2unix /statistics_service_entrypoint.sh && apt-get --purge remove -y dos2unix && rm -rf /var/lib/apt/lists/*
+COPY consumer_entrypoint.sh /consumer_entrypoint.sh
+RUN chmod a+x /statistics_service_entrypoint.sh /consumer_entrypoint.sh
+RUN dos2unix /statistics_service_entrypoint.sh /consumer_entrypoint.sh && apt-get --purge remove -y dos2unix && rm -rf /var/lib/apt/lists/*

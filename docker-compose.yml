@@ -26,6 +26,17 @@ services:
     ports:
       - "27017:27017"
 
+  rabbitmq:
+    container_name: rabbitmq
+    image: public.ecr.aws/docker/library/rabbitmq:3
+    ports:
+      - "5672:5672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 15s
+      timeout: 15s
+      retries: 10
+
   user_service:
     build:
       context: .
@@ -63,6 +74,20 @@ services:
       - ./statistics_service:/app/statistics_service
     depends_on:
       mongo:
+        condition: service_started
+
+  consumer:
+    build:
+      context: .
+      dockerfile: statistics_service/Dockerfile
+    entrypoint: /consumer_entrypoint.sh
+    command: bash -c "ls && cd app && ls"
+    volumes:
+      - ./statistics_service:/app/statistics_service
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      statistics_service:
         condition: service_started
 
 volumes:

@@ -4,6 +4,7 @@ from app.core.crud.user_crud import UserCRUD
 from app.core.fastapi.exceptions import DuplicatedUserException, NotFoundException
 from app.core.schemas.auth_schema import UserSchema
 from app.core.schemas.user_schema import UserSerializer
+from app.producer import publish
 
 
 class UserService:
@@ -23,3 +24,5 @@ class UserService:
     @staticmethod
     async def delete_user(user_id: UUID) -> None:
         await UserCRUD.delete(id=user_id)
+        data = {'user_id': str(user_id)}
+        await publish(send_method="delete_stats", data=data)
