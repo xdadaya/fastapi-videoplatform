@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c1758dbfb4d57d932e50cd90d900b600b74cedc6ebd5ffa46d097ca4a0aafdd9"
+            "sha256": "4557ed773f0c793243d5d9e5548fda7e1bb49ddb00783913aa7394cd57c00ce9"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -100,19 +100,19 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:536d9e7a074f4f16cc87b426f91b3079edd5c6927541a04f7e3fa28c53293532",
-                "sha256:d9fd57d6e98fd919cdbd613428f685e05b48c71477fda1aa7fbf51867262c7d1"
+                "sha256:983ec9e539431c29b5265e435b91af7c0d77a75809e173427798edb4ede1d69c",
+                "sha256:f35a42c6d0130a75e58485efa94383256d9b8c72c3a31ad872807873a8800363"
             ],
             "index": "pypi",
-            "version": "==1.26.99"
+            "version": "==1.26.98"
         },
         "botocore": {
             "hashes": [
-                "sha256:15c205e4578253da1e8cc247b9d4755042f5f873f68ac6e5fed48f4bd6f008c6",
-                "sha256:d1770b4fe5531870af7a81e9897b2092d2f89e4ba8cb7abbbaf3ab952f6b8a6f"
+                "sha256:ae906c1feb56063a38ffd2280232fa44d634057825470d3beed274925088cb42",
+                "sha256:b74283ff71eb4e57edfa5cf6dc36d959b1eec618a2b1e5e781643184857dd1c4"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==1.29.99"
+            "version": "==1.29.98"
         },
         "certifi": {
             "hashes": [
@@ -412,13 +412,13 @@
             "markers": "python_version >= '3.7'",
             "version": "==23.0"
         },
-        "pamqp": {
+        "pika": {
             "hashes": [
-                "sha256:15acef752356593ca569d13dfedc8ada9f17deeeb8cec4f7b77825e2b6c7de3e",
-                "sha256:22550ceb1ca50aafda65873e77e8c1c1b139fb5975e1a09860fae940cf8e970a"
+                "sha256:89f5e606646caebe3c00cbdbc4c2c609834adde45d7507311807b5775edac8e0",
+                "sha256:beb19ff6dd1547f99a29acc2c6987ebb2ba7c44bf44a3f8e305877c5ef7d2fdc"
             ],
-            "markers": "python_version >= '3.7'",
-            "version": "==3.2.1"
+            "index": "pypi",
+            "version": "==1.3.1"
         },
         "pluggy": {
             "hashes": [
