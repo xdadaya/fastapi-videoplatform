@@ -5,12 +5,15 @@ import aio_pika
 
 from app.database.db_utils import connect
 from app.services.message_service import MessageService
+from app.core.config import get_settings
+
+
+settings = get_settings()
 
 
 async def main() -> None:
-    config = dotenv_values(".env")
-    connection = await aio_pika.connect_robust(f"amqp://guest:guest@{config['RB_HOST']}:{config['RB_PORT']}//")
-    queue_name = config['RB_QUEUE_NAME']
+    connection = await aio_pika.connect_robust(settings.broker_url)
+    queue_name = settings.RB_QUEUE_NAME
     await connect()
     async with connection:
         channel = await connection.channel()
