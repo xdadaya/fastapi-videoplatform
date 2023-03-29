@@ -2,7 +2,8 @@ from passlib.context import CryptContext
 from app.core.crud.user_crud import UserCRUD
 from app.core.fastapi.exceptions import PasswordDoNotMatchException, DuplicatedUserException, NotFoundException, \
     InvalidCredentialsException
-from app.core.schemas.auth_schema import UserRegisterRequest, UserLoginRequest, UserCreateSchema, TokenSchema
+from app.core.schemas.auth_schema import UserRegisterRequest, UserLoginRequest, UserCreateSchema, TokenSchema, \
+    RefreshTokenRequest
 from app.core.schemas.user_schema import UserSerializer
 from app.services.token_service import TokenService
 from app.producer import publish
@@ -35,6 +36,13 @@ class AuthService:
         except NotFoundException as exc:
             raise InvalidCredentialsException() from exc
         if cls.pwd_context.verify(user.password, user_in_db.password):
-            return TokenSchema(access_token=TokenService.generate_token(user_in_db.id))
+            access_token, refresh_token = TokenService.generate_token(user_in_db.id)
+            return TokenSchema(access_token=access_token, refresh_token=refresh_token)
         else:
             raise InvalidCredentialsException()
+
+    @classmethod
+    async def refresh(cls, refresh_token: RefreshTokenRequest) -> TokenSchema:
+        user_id = TokenService.verify_refresh_token(refresh_token.refresh_token)
+        access_token, refresh_token = TokenService.generate_token(user_id)
+        return TokenSchema(access_token=access_token, refresh_token=refresh_token)

@@ -39,12 +39,14 @@ def client() -> AsyncClient:
 
 @pytest.fixture
 def owner_access_token() -> str:
-    return f"{settings.AUTHENTICATION_HEADER_PREFIX} {TokenService.generate_token(uuid4())}"
+    access_token = TokenService.generate_token(uuid4())
+    return f"{settings.AUTHENTICATION_HEADER_PREFIX} {access_token}"
 
 
 @pytest.fixture
 def viewer_access_token() -> str:
-    return f"{settings.AUTHENTICATION_HEADER_PREFIX} {TokenService.generate_token(uuid4())}"
+    access_token = TokenService.generate_token(uuid4())
+    return f"{settings.AUTHENTICATION_HEADER_PREFIX} {access_token}"
 
 
 @pytest_asyncio.fixture(autouse=True, scope="function")

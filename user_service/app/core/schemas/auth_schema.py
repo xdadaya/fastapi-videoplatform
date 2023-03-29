@@ -18,8 +18,13 @@ class UserLoginRequest(UserSchema):
     password: str
 
 
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+
 class TokenSchema(BaseModel):
     access_token: str
+    refresh_token: str
 
 
 class UserToCreate(UserSchema):
