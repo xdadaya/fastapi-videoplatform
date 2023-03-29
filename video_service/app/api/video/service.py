@@ -2,7 +2,9 @@ from math import ceil
 from typing import List
 from uuid import UUID, uuid4
 
-from app.api.video.schemas import VideoSerializer, VideoCreateSchema, VideoCreateRequest, VideoUpdateRequest, \
+from fastapi import File, UploadFile
+
+from app.api.video.schemas import VideoSerializer, VideoCreateSchema, VideoCreateFormRequest, VideoUpdateRequest, \
     VideoUpdateSchema, VideoListResponse
 from app.core.crud.category_crud import CategoryCRUD
 from app.core.crud.video_crud import VideoCRUD
@@ -10,6 +12,7 @@ from app.core.crud.comment_crud import CommentCRUD
 from app.core.crud.comment_reaction_crud import CommentReactionCRUD
 from app.core.schemas.update_statistics_schema import UpdateSchema
 from app.services.s3_service import S3Service
+from app.core.fastapi.exceptions.exc import NotVideoException
 from app.producer import publish
 
 
@@ -30,8 +33,11 @@ class VideoService:
         return await VideoCRUD.retrieve(id=video_id)
 
     @staticmethod
-    async def create(video_data: VideoCreateRequest, user_id: UUID) -> VideoSerializer:
-        video_url = S3Service.upload_video(video_data.video)
+    async def create(video_data: VideoCreateFormRequest, user_id: UUID) -> VideoSerializer:
+        if not video_data.video.filename.endswith(".mp4"):
+            raise NotVideoException()
+        video_bytes = await video_data.video.read()
+        video_url = S3Service.upload_video(video_bytes)
         video_id = uuid4()
         category = await CategoryCRUD.get_or_create(name=video_data.category)
         video = VideoCreateSchema(id=video_id, title=video_data.title, description=video_data.description,

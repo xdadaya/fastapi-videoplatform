@@ -27,3 +27,7 @@ class InvalidCredentialsException(BaseHTTPException):
 class NotOwnerException(BaseHTTPException):
     status_code = HTTP_403_FORBIDDEN
     detail = "Forbidden"
+
+
+class NotVideoException(BaseHTTPException):
+    detail = "This file is not a video"

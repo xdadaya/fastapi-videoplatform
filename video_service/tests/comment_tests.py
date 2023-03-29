@@ -10,8 +10,9 @@ from app.api.video.schemas import VideoCreateRequest
 
 @pytest.mark.asyncio
 async def test_comment_post(client: AsyncClient, owner_access_token: str) -> None:
-    data = jsonable_encoder(VideoCreateRequest(title="Test", description="Test", category="Test", video="Test"))
-    response = await client.post("videos/", json=data, headers={"Authorization": owner_access_token})
+    data = {'title': "Test", 'description': "Description", 'category': "Category"}
+    file = {'video': open('tests/test_files/test_video.mp4', "rb")}
+    response = await client.post("videos/", data=data, files=file, headers={"Authorization": owner_access_token})
     video_id = response.json()["id"]
     data = jsonable_encoder(CommentCreateRequest(text="Test"))
     response = await client.post(f"videos/{video_id}/comment", json=data, headers={"Authorization": owner_access_token})
@@ -21,8 +22,9 @@ async def test_comment_post(client: AsyncClient, owner_access_token: str) -> Non
 
 @pytest.mark.asyncio
 async def test_comment_pagination_sorting(client: AsyncClient, owner_access_token: str) -> None:
-    data = jsonable_encoder(VideoCreateRequest(title="Test", description="Test", category="Test", video="Test"))
-    response = await client.post("videos/", json=data, headers={"Authorization": owner_access_token})
+    data = {'title': "Test", 'description': "Description", 'category': "Category"}
+    file = {'video': open('tests/test_files/test_video.mp4', "rb")}
+    response = await client.post("videos/", data=data, files=file, headers={"Authorization": owner_access_token})
     video_id = response.json()["id"]
     limit = 2
     comments_count = 11
@@ -45,8 +47,9 @@ async def test_comment_pagination_sorting(client: AsyncClient, owner_access_toke
 @pytest.mark.asyncio
 async def test_comment_update(client: AsyncClient, owner_access_token: str,
                               viewer_access_token: str) -> None:
-    data = jsonable_encoder(VideoCreateRequest(title="Test", description="Test", category="Test", video="Test"))
-    response = await client.post("videos/", json=data, headers={"Authorization": owner_access_token})
+    data = {'title': "Test", 'description': "Description", 'category': "Category"}
+    file = {'video': open('tests/test_files/test_video.mp4', "rb")}
+    response = await client.post("videos/", data=data, files=file, headers={"Authorization": owner_access_token})
     video_id = response.json()["id"]
     data = jsonable_encoder(CommentCreateRequest(text="Test"))
     response = await client.post(f"videos/{video_id}/comment", json=data, headers={"Authorization": owner_access_token})
@@ -63,8 +66,9 @@ async def test_comment_update(client: AsyncClient, owner_access_token: str,
 
 @pytest.mark.asyncio
 async def test_comment_delete(client: AsyncClient, owner_access_token: str, viewer_access_token: str) -> None:
-    data = jsonable_encoder(VideoCreateRequest(title="Test", description="Test", category="Test", video="Test"))
-    response = await client.post("videos/", json=data, headers={"Authorization": owner_access_token})
+    data = {'title': "Test", 'description': "Description", 'category': "Category"}
+    file = {'video': open('tests/test_files/test_video.mp4', "rb")}
+    response = await client.post("videos/", data=data, files=file, headers={"Authorization": owner_access_token})
     video_id = response.json()["id"]
     data = jsonable_encoder(CommentCreateRequest(text="Test"))
     response = await client.post(f"videos/{video_id}/comment", json=data, headers={"Authorization": owner_access_token})
@@ -79,8 +83,9 @@ async def test_comment_delete(client: AsyncClient, owner_access_token: str, view
 
 @pytest.mark.asyncio
 async def test_like_comment(client: AsyncClient, owner_access_token: str, viewer_access_token: str) -> None:
-    data = jsonable_encoder(VideoCreateRequest(title="Test", description="Test", category="Test", video="Test"))
-    response = await client.post("videos/", json=data, headers={"Authorization": owner_access_token})
+    data = {'title': "Test", 'description': "Description", 'category': "Category"}
+    file = {'video': open('tests/test_files/test_video.mp4', "rb")}
+    response = await client.post("videos/", data=data, files=file, headers={"Authorization": owner_access_token})
     video_id = response.json()["id"]
     data = jsonable_encoder(CommentCreateRequest(text="Test"))
     response = await client.post(f"videos/{video_id}/comment", json=data, headers={"Authorization": owner_access_token})
@@ -101,8 +106,9 @@ async def test_like_comment(client: AsyncClient, owner_access_token: str, viewer
 
 @pytest.mark.asyncio
 async def test_dislike_comment(client: AsyncClient, owner_access_token: str, viewer_access_token: str) -> None:
-    data = jsonable_encoder(VideoCreateRequest(title="Test", description="Test", category="Test", video="Test"))
-    response = await client.post("videos/", json=data, headers={"Authorization": owner_access_token})
+    data = {'title': "Test", 'description': "Description", 'category': "Category"}
+    file = {'video': open('tests/test_files/test_video.mp4', "rb")}
+    response = await client.post("videos/", data=data, files=file, headers={"Authorization": owner_access_token})
     video_id = response.json()["id"]
     data = jsonable_encoder(CommentCreateRequest(text="Test"))
     response = await client.post(f"videos/{video_id}/comment", json=data, headers={"Authorization": owner_access_token})

@@ -5,21 +5,23 @@ import pytest
 from fastapi.encoders import jsonable_encoder
 from httpx import AsyncClient
 
-from app.api.video.schemas import VideoCreateRequest, VideoUpdateRequest
+from app.api.video.schemas import VideoUpdateRequest
 
 
 @pytest.mark.asyncio
 async def test_video_post(client: AsyncClient, owner_access_token: str) -> None:
-    data = jsonable_encoder(VideoCreateRequest(title="Test", description="Test", category="Test", video="Test"))
-    response = await client.post("videos/", json=data, headers={"Authorization": owner_access_token})
+    data = {'title': "Test", 'description': "Description", 'category': "Category"}
+    file = {'video': open('tests/test_files/test_video.mp4', "rb")}
+    response = await client.post("videos/", data=data, files=file, headers={"Authorization": owner_access_token})
     assert response.status_code == 201
     assert response.json()["title"] == data["title"]
 
 
 @pytest.mark.asyncio
 async def test_video_retrieve(client: AsyncClient, owner_access_token: str) -> None:
-    data = jsonable_encoder(VideoCreateRequest(title="Test", description="Test", category="Test", video="Test"))
-    response = await client.post("videos/", json=data, headers={"Authorization": owner_access_token})
+    data = {'title': "Test", 'description': "Description", 'category': "Category"}
+    file = {'video': open('tests/test_files/test_video.mp4', "rb")}
+    response = await client.post("videos/", data=data, files=file, headers={"Authorization": owner_access_token})
     video_id = response.json()["id"]
     response = await client.get(f"videos/{video_id}")
     assert response.status_code == 200
@@ -37,10 +39,9 @@ async def test_video_pagination(client: AsyncClient, owner_access_token: str) ->
     limit = 3
     videos_count = 10
     for i in range(videos_count):
-        data = jsonable_encoder(
-            VideoCreateRequest(title=f"Test {i}", description="Test", category="Test", video="Test")
-        )
-        await client.post("videos/", json=data, headers={"Authorization": owner_access_token})
+        data = {'title': "Test", 'description': "Description", 'category': "Category"}
+        file = {'video': open('tests/test_files/test_video.mp4', "rb")}
+        await client.post("videos/", data=data, files=file, headers={"Authorization": owner_access_token})
     response = await client.get(f"videos/?limit={limit}")
     assert response.status_code == 200
     assert response.json()["total_pages"] == ceil(videos_count / limit)
@@ -48,8 +49,9 @@ async def test_video_pagination(client: AsyncClient, owner_access_token: str) ->
 
 @pytest.mark.asyncio
 async def test_video_update(client: AsyncClient, owner_access_token: str, viewer_access_token: str) -> None:
-    data = jsonable_encoder(VideoCreateRequest(title="Test", description="Test", category="Test", video="Test"))
-    response = await client.post("videos/", json=data, headers={"Authorization": owner_access_token})
+    data = {'title': "Test", 'description': "Description", 'category': "Category"}
+    file = {'video': open('tests/test_files/test_video.mp4', "rb")}
+    response = await client.post("videos/", data=data, files=file, headers={"Authorization": owner_access_token})
     video_id = response.json()["id"]
     data = jsonable_encoder(VideoUpdateRequest(title="UpdateTest", description="UpdateTest", category="UpdateTest"))
     response = await client.put(f"videos/{video_id}", json=data, headers={"Authorization": viewer_access_token})
@@ -63,8 +65,9 @@ async def test_video_update(client: AsyncClient, owner_access_token: str, viewer
 
 @pytest.mark.asyncio
 async def test_video_delete(client: AsyncClient, owner_access_token: str, viewer_access_token: str) -> None:
-    data = jsonable_encoder(VideoCreateRequest(title="Test", description="Test", category="Test", video="Test"))
-    response = await client.post("videos/", json=data, headers={"Authorization": owner_access_token})
+    data = {'title': "Test", 'description': "Description", 'category': "Category"}
+    file = {'video': open('tests/test_files/test_video.mp4', "rb")}
+    response = await client.post("videos/", data=data, files=file, headers={"Authorization": owner_access_token})
     video_id = response.json()["id"]
     response = await client.delete(f"videos/{video_id}", headers={"Authorization": viewer_access_token})
     assert response.status_code == 403

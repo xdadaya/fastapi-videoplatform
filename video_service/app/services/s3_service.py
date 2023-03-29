@@ -10,7 +10,7 @@ class S3Service:
 
     @classmethod
     def upload_video(cls, video: bytes) -> str:
-        file_key = str(uuid4())
+        file_key = str(uuid4()) + ".mp4"
         session = boto3.session.Session(aws_access_key_id=cls.settings.AWS_ACCESS_KEY,
                                         aws_secret_access_key=cls.settings.AWS_SECRET_ACCESS_KEY)
         s3 = session.resource('s3')

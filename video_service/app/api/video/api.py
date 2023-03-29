@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from fastapi import APIRouter, Depends
-from app.api.video.schemas import VideoCreateRequest, VideoSerializer, VideoUpdateRequest, VideoListResponse
+from app.api.video.schemas import VideoCreateFormRequest, VideoSerializer, VideoUpdateRequest, VideoListResponse
 from app.api.comment.schemas import CommentCreateRequest, CommentSerializer, CommentListResponse
 from app.api.video.service import VideoService
 from app.api.comment.service import CommentService
@@ -22,7 +22,8 @@ async def get_video_by_id(video_id: UUID) -> VideoSerializer:
 
 
 @api.post("/", response_model=VideoSerializer, status_code=201)
-async def post_video(video_data: VideoCreateRequest, user_id: UUID = Depends(verify_token),) -> VideoSerializer:
+async def post_video(video_data: VideoCreateFormRequest = Depends(VideoCreateFormRequest.as_form),
+                     user_id: UUID = Depends(verify_token),) -> VideoSerializer:
     return await VideoService.create(video_data, user_id)
 
 
