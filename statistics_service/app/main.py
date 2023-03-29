@@ -6,9 +6,11 @@ from app.database.db import get_database
 
 from app.database.models.user_statistics import UserStatisticsResponseScheme, UserStatisticsBaseScheme
 from app.core.crud.user_statistics_crud import UserStatisticsCRUD
+from app.core.middleware.middleware import MaintainceModeMiddleware
 
 
 app = FastAPI(title="Statistics App")
+app.add_middleware(MaintainceModeMiddleware)
 app.add_event_handler('startup', connect)
 app.add_event_handler('shutdown', close_connection)
 

@@ -1,5 +1,4 @@
 import asyncio
-from dotenv import dotenv_values
 
 import aio_pika
 

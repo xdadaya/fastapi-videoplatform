@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     RB_QUEUE_NAME: str
     RB_USER: str
     RB_PASSWORD: str
+    MAINTAINCE_MODE: bool
 
     @property
     def broker_url(self):
