@@ -1,6 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from typing import Any
-from app.core.utils import OID
 
 
 class CRUDMixin:

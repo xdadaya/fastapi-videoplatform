@@ -2,4 +2,4 @@ from app.core.fastapi.exceptions.exc import InvalidCredentialsException, Passwor
     DuplicatedUserException, NotFoundException, UnauthorizedException, BaseHTTPException
 
 __all__ = ['InvalidCredentialsException', 'PasswordDoNotMatchException',
-    'DuplicatedUserException', 'NotFoundException', 'UnauthorizedException', 'BaseHTTPException']
+           'DuplicatedUserException', 'NotFoundException', 'UnauthorizedException', 'BaseHTTPException']

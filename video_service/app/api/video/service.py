@@ -2,8 +2,6 @@ from math import ceil
 from typing import List
 from uuid import UUID, uuid4
 
-from fastapi import File, UploadFile
-
 from app.api.video.schemas import VideoSerializer, VideoCreateSchema, VideoCreateFormRequest, VideoUpdateRequest, \
     VideoUpdateSchema, VideoListResponse
 from app.core.crud.category_crud import CategoryCRUD

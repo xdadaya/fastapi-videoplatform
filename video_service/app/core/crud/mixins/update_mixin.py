@@ -14,7 +14,7 @@ class UpdateMixin(BaseMixin):
     async def update(cls, id: UUID, input_data: BaseModel) -> None:
         query = (
             update(cls.Table)
-            .where(cls.Table.id == id, cls.Table.is_deleted == False)
+            .where(cls.Table.id == id, cls.Table.is_deleted is False)
             .values(
                 **(input_data if isinstance(input_data, dict) else input_data.__dict__)
             )

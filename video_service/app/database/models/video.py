@@ -16,4 +16,3 @@ class Video(Base, ExtraFields):
     video_url = Column(String(2048))
     owner_id = Column(UUID(as_uuid=True), nullable=False)
     category_id = Column(UUID(as_uuid=True), ForeignKey("categories.id", ondelete="CASCADE"), nullable=False)
-

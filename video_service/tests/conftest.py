@@ -1,5 +1,6 @@
 import asyncio
 from uuid import uuid4
+from typing import Any
 
 import pytest
 import pytest_asyncio
@@ -9,7 +10,6 @@ from app.main import app
 from app.database.db import create_models, delete_models
 from app.core.config import get_settings
 from app.services.token_service import TokenService
-from app.services.s3_service import S3Service
 
 settings = get_settings()
 
@@ -18,9 +18,15 @@ def upload_video_mock(video: bytes) -> str:
     return "testurl"
 
 
+async def publish_mock(data: dict[Any, Any], send_method: str) -> None:
+    pass
+
+
 @pytest.fixture(scope="function", autouse=True)
-def change_upload_video(monkeypatch) -> None:
-    monkeypatch.setattr(S3Service, "upload_video", upload_video_mock)
+def mocking_functions(monkeypatch) -> None:
+    monkeypatch.setattr("app.services.s3_service.S3Service.upload_video", upload_video_mock)
+    monkeypatch.setattr("app.api.video.service.publish", publish_mock)
+    monkeypatch.setattr("app.api.comment.service.publish", publish_mock)
 
 
 @pytest.fixture(scope="session", autouse=True)

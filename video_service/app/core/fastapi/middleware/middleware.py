@@ -60,4 +60,3 @@ async def is_comment_owner(request: Request) -> None:
     comment = await CommentCRUD.retrieve(id=comment_id)
     if comment.owner_id != user_id:
         raise NotOwnerException()
-

@@ -5,7 +5,6 @@ from fastapi.encoders import jsonable_encoder
 from httpx import AsyncClient
 
 from app.api.comment.schemas import CommentCreateRequest
-from app.api.video.schemas import VideoCreateRequest
 
 
 @pytest.mark.asyncio
@@ -36,7 +35,7 @@ async def test_comment_pagination_sorting(client: AsyncClient, owner_access_toke
     assert response.status_code == 200
     assert response.json()["total_pages"] == ceil(comments_count / limit)
     items_count = len(response.json()["items"])
-    assert response.json()["items"][0][sort_field] < response.json()["items"][items_count-1][sort_field]
+    assert response.json()["items"][0][sort_field] < response.json()["items"][items_count - 1][sort_field]
 
     response = await client.get(f"videos/{video_id}/comments?limit={limit}&sort=-{sort_field}")
     assert response.status_code == 200

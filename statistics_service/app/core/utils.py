@@ -19,4 +19,4 @@ class OID(str):
 class MongoModel(BaseModel):
     class Config(BaseConfig):
         allow_population_by_field_name = True
-        json_encoders = { ObjectId: lambda oid: str(oid) }
+        json_encoders = {ObjectId: lambda oid: str(oid)}

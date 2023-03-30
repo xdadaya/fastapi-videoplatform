@@ -77,4 +77,3 @@ async def test_video_delete(client: AsyncClient, owner_access_token: str, viewer
     assert response.status_code == 200
     response = await client.get(f"videos/{video_id}")
     assert response.status_code == 404
-

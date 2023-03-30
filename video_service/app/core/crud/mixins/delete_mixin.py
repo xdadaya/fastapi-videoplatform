@@ -1,4 +1,4 @@
-from sqlalchemy import update, delete
+from sqlalchemy import update
 from uuid import UUID
 
 from app.core.crud.mixins.base_mixin import BaseMixin
