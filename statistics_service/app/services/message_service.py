@@ -20,4 +20,6 @@ class MessageService:
         elif body.method == "update_stats":
             data = body.data.dict()
             user_id = UUID(data.pop("user_id"))
-            await UserStatisticsCRUD.update(db, filter={"user_id": user_id}, operator="$inc", **data)
+            await UserStatisticsCRUD.update(
+                db, filter={"user_id": user_id}, operator="$inc", **data
+            )

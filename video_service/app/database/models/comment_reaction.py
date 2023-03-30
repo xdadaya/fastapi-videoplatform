@@ -13,7 +13,11 @@ class CommentReaction(Base, ExtraFields):
     __tablename__ = "comment_reactions"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    comment_id = Column(UUID(as_uuid=True), ForeignKey("comments.id", ondelete="CASCADE"), nullable=False)
+    comment_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("comments.id", ondelete="CASCADE"),
+        nullable=False,
+    )
     owner_id = Column(UUID(as_uuid=True), nullable=False)
     reaction_type = Column(Enum(ReactionType), nullable=False)
     comment = relationship("Comment", backref="reactions")

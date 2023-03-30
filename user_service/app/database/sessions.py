@@ -43,4 +43,5 @@ class Transactional:
                 await session.rollback()
                 raise exception
             return result
+
         return decorator

@@ -24,5 +24,5 @@ class UserService:
     @staticmethod
     async def delete_user(user_id: UUID) -> None:
         await UserCRUD.delete(id=user_id)
-        data = {'user_id': str(user_id)}
+        data = {"user_id": str(user_id)}
         await publish(send_method="delete_stats", data=data)

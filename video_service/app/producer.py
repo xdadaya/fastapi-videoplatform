@@ -15,7 +15,7 @@ async def publish(data: dict[Any, Any], send_method: str) -> None:
     async with connection:
         routing_key = settings.RB_QUEUE_NAME
         channel = await connection.channel()
-        data = {'method': send_method, 'data': data}
+        data = {"method": send_method, "data": data}
         await channel.default_exchange.publish(
             aio_pika.Message(body=json.dumps(data).encode()),
             routing_key=routing_key,

@@ -11,5 +11,8 @@ class VideoCRUD(BaseCRUD):
     @classmethod
     @Transactional(propagation=Propagation.REQUIRED)
     async def delete(cls, **kwargs) -> None:
-        query = cls.filter_query(query=update(cls.Table).values(is_deleted=True, video_url=None), kwargs=kwargs)
+        query = cls.filter_query(
+            query=update(cls.Table).values(is_deleted=True, video_url=None),
+            kwargs=kwargs,
+        )
         await session.execute(query)

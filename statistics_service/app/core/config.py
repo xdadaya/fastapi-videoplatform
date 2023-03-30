@@ -18,15 +18,19 @@ class Settings(BaseSettings):
 
     @property
     def broker_url(self):
-        return f"amqp://{self.RB_USER}:{self.RB_PASSWORD}@{self.RB_HOST}:{self.RB_PORT}//"
+        return (
+            f"amqp://{self.RB_USER}:{self.RB_PASSWORD}@{self.RB_HOST}:{self.RB_PORT}//"
+        )
 
     @property
     def database_url(self):
-        return f"mongodb://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/"\
-               f"{self.DB_NAME}?authSource=admin&uuidRepresentation=standard"
+        return (
+            f"mongodb://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/"
+            f"{self.DB_NAME}?authSource=admin&uuidRepresentation=standard"
+        )
 
     class Config:
-        env_file = '.env'
+        env_file = ".env"
 
 
 @lru_cache()

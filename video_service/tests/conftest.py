@@ -24,7 +24,9 @@ async def publish_mock(data: dict[Any, Any], send_method: str) -> None:
 
 @pytest.fixture(scope="function", autouse=True)
 def mocking_functions(monkeypatch) -> None:
-    monkeypatch.setattr("app.services.s3_service.S3Service.upload_video", upload_video_mock)
+    monkeypatch.setattr(
+        "app.services.s3_service.S3Service.upload_video", upload_video_mock
+    )
     monkeypatch.setattr("app.api.video.service.publish", publish_mock)
     monkeypatch.setattr("app.api.comment.service.publish", publish_mock)
 
@@ -37,9 +39,9 @@ def event_loop() -> asyncio.AbstractEventLoop:
     loop.close()
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def client() -> AsyncClient:
-    client = AsyncClient(app=app, base_url='http://localhost:5000/api/v1/')
+    client = AsyncClient(app=app, base_url="http://localhost:5000/api/v1/")
     return client
 
 

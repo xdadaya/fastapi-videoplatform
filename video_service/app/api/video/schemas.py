@@ -15,8 +15,13 @@ class VideoCreateFormRequest(BaseModel):
     video: UploadFile
 
     @classmethod
-    def as_form(cls, title: str = Form(...), description: str = Form(...), category: str = Form(...),
-                video: UploadFile = File(...)) -> "VideoCreateFormRequest":
+    def as_form(
+        cls,
+        title: str = Form(...),
+        description: str = Form(...),
+        category: str = Form(...),
+        video: UploadFile = File(...),
+    ) -> "VideoCreateFormRequest":
         return cls(title=title, description=description, category=category, video=video)
 
 
