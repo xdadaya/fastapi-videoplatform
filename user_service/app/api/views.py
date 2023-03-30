@@ -2,7 +2,8 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 from passlib.context import CryptContext
-from app.core.schemas.auth_schema import UserRegisterRequest, UserLoginRequest, TokenSchema, UserSchema
+from app.core.schemas.auth_schema import UserRegisterRequest, UserLoginRequest, TokenSchema, UserSchema, \
+    RefreshTokenRequest
 from app.core.schemas.user_schema import UserSerializer
 from app.core.fastapi.middleware.middleware import verify_token
 from app.api.auth_service import AuthService
@@ -36,3 +37,8 @@ async def update_user_data(user: UserSchema, user_id: UUID = Depends(verify_toke
 @api.delete("/me", status_code=200)
 async def delete_user(user_id: UUID = Depends(verify_token)) -> None:
     await UserService.delete_user(user_id)
+
+
+@api.post("/refresh", status_code=200, response_model=TokenSchema)
+async def refresh_token(refresh_token: RefreshTokenRequest) -> TokenSchema:
+    return await AuthService.refresh(refresh_token)

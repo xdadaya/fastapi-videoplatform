@@ -1,11 +1,23 @@
 from uuid import UUID
 
-from fastapi import File
+from fastapi import File, UploadFile, Form
 from pydantic import BaseModel
 
 
 class CategoryCreateSchema(BaseModel):
     name: str
+
+
+class VideoCreateFormRequest(BaseModel):
+    title: str
+    description: str
+    category: str
+    video: UploadFile
+
+    @classmethod
+    def as_form(cls, title: str = Form(...), description: str = Form(...), category: str = Form(...),
+                video: UploadFile = File(...)) -> "VideoCreateFormRequest":
+        return cls(title=title, description=description, category=category, video=video)
 
 
 class VideoCreateRequest(BaseModel):
