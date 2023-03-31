@@ -58,7 +58,7 @@ services:
     volumes:
       - ./user_service:/app/user_service
     healthcheck:
-      test: curl --fail http://localhost:5000/docs || exit 1
+      test: curl --fail http://localhost:5000/healthcheck || exit 1
       interval: 10s
       timeout: 10s
       retries: 3
@@ -79,7 +79,7 @@ services:
     volumes:
       - ./video_service:/app/video_service
     healthcheck:
-      test: curl --fail http://localhost:5100/docs || exit 1
+      test: curl --fail http://localhost:5100/healthcheck || exit 1
       interval: 10s
       timeout: 10s
       retries: 3
@@ -100,7 +100,7 @@ services:
     volumes:
       - ./statistics_service:/app/statistics_service
     healthcheck:
-      test: curl --fail http://localhost:5200/docs || exit 1
+      test: curl --fail http://localhost:5200/healthcheck || exit 1
       interval: 10s
       timeout: 10s
       retries: 3

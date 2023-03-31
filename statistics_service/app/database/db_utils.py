@@ -13,3 +13,13 @@ async def connect():
 
 async def close_connection():
     db.client.close()
+
+
+async def check_db() -> bool:
+    try:
+        client = AsyncIOMotorClient(settings.database_url)
+        db = client.get_database()
+        await db.command("ping")
+        return True
+    except Exception:
+        return False

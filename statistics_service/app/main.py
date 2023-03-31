@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from fastapi import FastAPI, Depends, HTTPException
-from app.database.db_utils import connect, close_connection
+from app.database.db_utils import connect, close_connection, check_db
 from app.database.db import get_database
 
 from app.database.models.user_statistics import (
@@ -18,7 +18,7 @@ app.add_event_handler("startup", connect)
 app.add_event_handler("shutdown", close_connection)
 
 
-@app.get("/{user_id}", response_model=UserStatisticsResponseScheme)
+@app.get("/stats/{user_id}", response_model=UserStatisticsResponseScheme)
 async def index(
     user_id: UUID, db=Depends(get_database)
 ) -> UserStatisticsResponseScheme:
@@ -49,3 +49,11 @@ async def index(
         avg_text_length=avg_text_length,
         avg_comments_per_video=avg_comments_per_video,
     )
+
+
+@app.get("/healthcheck")
+async def healthcheck() -> dict[str, bool]:
+    result = await check_db()
+    if not result:
+        raise HTTPException(503)
+    return {"ok": result}
