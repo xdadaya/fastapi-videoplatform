@@ -1,0 +1,51 @@
+version: "3"
+
+
+services:
+  db:
+    container_name: db_videoplatform
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fastapi_users_test, fastapi_videos_test
+      PGDATA: /data/postgresc
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  user_service:
+    build:
+      context: .
+      dockerfile: user_service/Dockerfile
+    ports:
+      - "5000:5000"
+    command: ["pytest"]
+    volumes:
+      - ./user_service:/app/user_service
+    depends_on:
+      db:
+        condition: service_healthy
+
+  video_service:
+    build:
+      context: .
+      dockerfile: video_service/Dockerfile
+    ports:
+      - "5100:5100"
+    command: ["pytest"]
+    volumes:
+      - ./video_service:/app/video_service
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres:
