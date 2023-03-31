@@ -2,8 +2,13 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 from passlib.context import CryptContext
-from app.core.schemas.auth_schema import UserRegisterRequest, UserLoginRequest, TokenSchema, UserSchema, \
-    RefreshTokenRequest
+from app.core.schemas.auth_schema import (
+    UserRegisterRequest,
+    UserLoginRequest,
+    TokenSchema,
+    UserSchema,
+    RefreshTokenRequest,
+)
 from app.core.schemas.user_schema import UserSerializer
 from app.core.fastapi.middleware.middleware import verify_token
 from app.api.auth_service import AuthService
@@ -11,7 +16,9 @@ from app.api.user_service import UserService
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-api = APIRouter(prefix="/users", )
+api = APIRouter(
+    prefix="/users",
+)
 
 
 @api.post("/register", response_model=UserSerializer, status_code=201)
@@ -30,7 +37,9 @@ async def get_user_data(user_id: UUID = Depends(verify_token)) -> UserSerializer
 
 
 @api.put("/me", response_model=UserSerializer)
-async def update_user_data(user: UserSchema, user_id: UUID = Depends(verify_token)) -> UserSerializer:
+async def update_user_data(
+    user: UserSchema, user_id: UUID = Depends(verify_token)
+) -> UserSerializer:
     return await UserService.update_user(user, user_id)
 
 

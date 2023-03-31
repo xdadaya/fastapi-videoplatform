@@ -15,10 +15,14 @@ settings = get_settings()
 
 
 class MaintainceModeMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
         response = await call_next(request)
         if settings.MAINTAINCE_MODE:
-            return PlainTextResponse(content='Maintaince mode is on. Server is unavailable')
+            return PlainTextResponse(
+                content="Maintaince mode is on. Server is unavailable"
+            )
         return response
 
 

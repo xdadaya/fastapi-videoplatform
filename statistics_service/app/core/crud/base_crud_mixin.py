@@ -1,6 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from typing import Any
-from app.core.utils import OID
 
 
 class CRUDMixin:
@@ -27,7 +26,13 @@ class CRUDMixin:
         return result
 
     @classmethod
-    async def update(cls, conn: AsyncIOMotorClient, filter: dict[Any, Any], operator: str = "$set", **kwargs) -> None:
+    async def update(
+        cls,
+        conn: AsyncIOMotorClient,
+        filter: dict[Any, Any],
+        operator: str = "$set",
+        **kwargs
+    ) -> None:
         await conn[cls.db_name][cls.Collection].update_one(filter, {operator: kwargs})
 
     @classmethod

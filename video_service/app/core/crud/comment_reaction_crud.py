@@ -13,4 +13,3 @@ class CommentReactionCRUD(BaseCRUD):
     async def delete(cls, **kwargs) -> None:
         query = cls.filter_query(query=delete(cls.Table), kwargs=kwargs)
         await session.execute(query)
-

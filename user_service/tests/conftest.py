@@ -17,9 +17,9 @@ def event_loop() -> asyncio.AbstractEventLoop:
     loop.close()
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def client() -> AsyncClient:
-    client = AsyncClient(app=app, base_url='http://localhost:5000/api/v1/users/')
+    client = AsyncClient(app=app, base_url="http://localhost:5000/api/v1/users/")
     return client
 
 

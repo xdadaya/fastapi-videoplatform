@@ -14,21 +14,29 @@ class TokenService:
     def verify_token(authorization: str) -> UUID:
         token_header, token = authorization.split(" ")
         if token_header.lower() != settings.AUTHENTICATION_HEADER_PREFIX.lower():
-            raise HTTPException(status_code=403, detail='Authentication error. Unable to decode token')
+            raise HTTPException(
+                status_code=403, detail="Authentication error. Unable to decode token"
+            )
         try:
-            payload = jwt.decode(token, key=settings.SECRET_KEY, algorithms=settings.HASH_ALGORITHM)
+            payload = jwt.decode(
+                token, key=settings.SECRET_KEY, algorithms=settings.HASH_ALGORITHM
+            )
         except Exception:
-            raise HTTPException(status_code=403, detail='Authentication error. Unable to decode token')
+            raise HTTPException(
+                status_code=403, detail="Authentication error. Unable to decode token"
+            )
         if payload["type"] == "access":
             return UUID(payload["id"])
-        raise HTTPException(status_code=403, detail='Authentication error. Its not valid access token')
+        raise HTTPException(
+            status_code=403, detail="Authentication error. Its not valid access token"
+        )
 
     @staticmethod
     def generate_token(user_id: UUID) -> str:
         expires_at = datetime.now() + timedelta(minutes=settings.TOKEN_EXPIRE_MINUTES)
-        token = jwt.encode({
-            'id': str(user_id),
-            'exp': expires_at,
-            'type': "access"
-        }, settings.SECRET_KEY, algorithm=settings.HASH_ALGORITHM)
+        token = jwt.encode(
+            {"id": str(user_id), "exp": expires_at, "type": "access"},
+            settings.SECRET_KEY,
+            algorithm=settings.HASH_ALGORITHM,
+        )
         return token

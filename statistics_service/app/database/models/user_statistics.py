@@ -29,4 +29,4 @@ class UserStatisticsResponseScheme(BaseModel):
 
 
 class UserStatisticsDBScheme(MongoModel, UserStatisticsBaseScheme):
-    id: OID = Field(alias='_id')
+    id: OID = Field(alias="_id")

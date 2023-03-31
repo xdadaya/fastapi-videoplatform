@@ -26,10 +26,12 @@ class ListMixin(BaseMixin):
         return query
 
     @classmethod
-    async def list_items_with_pagination(cls, page: int, limit: int, sort: str = None, **kwargs) -> list[TableType]:
+    async def list_items_with_pagination(
+        cls, page: int, limit: int, sort: str = None, **kwargs
+    ) -> list[TableType]:
         query = cls.sort_items(sort, **kwargs)
         offset_page = page - 1
-        query = (query.offset(offset_page * limit).limit(limit))
+        query = query.offset(offset_page * limit).limit(limit)
         result = await session.execute(query)
         result = result.scalars().all()
         return result
@@ -43,10 +45,10 @@ class ListMixin(BaseMixin):
         return result
 
     @classmethod
-    async def search_list_query(cls, search_schema: Optional[list[SearchSchema]] = None, **kwargs) -> list[TableType]:
+    async def search_list_query(
+        cls, search_schema: Optional[list[SearchSchema]] = None, **kwargs
+    ) -> list[TableType]:
         query = cls.filter_query(query=select(cls.Table), kwargs=kwargs)
-        all_columns = cls.Table.__dict__
-        search_item: SearchSchema
         conditions = [
             getattr(cls.Table, search_item.field).ilike(f"%{search_item.like}%")
             for search_item in search_schema
