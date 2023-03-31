@@ -1,5 +1,6 @@
 from contextvars import ContextVar, Token
 from typing import Union
+import asyncpg
 
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -45,3 +46,17 @@ async def create_models():
 async def delete_models():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
+
+
+async def check_db() -> bool:
+    try:
+        conn = await asyncpg.connect(
+            user=settings.DB_USER,
+            password=settings.DB_PASSWORD,
+            database=settings.DB_NAME,
+            host=settings.DB_HOST,
+        )
+        await conn.close()
+        return True
+    except Exception:
+        return False

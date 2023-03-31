@@ -15,6 +15,11 @@ services:
     ports:
       - "5432:5432"
     restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   mongo:
     container_name: mongodb
@@ -25,6 +30,12 @@ services:
       - MONGO_INITDB_DATABASE=video_statistics
     ports:
       - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/video_statistics --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   rabbitmq:
     container_name: rabbitmq
@@ -46,9 +57,17 @@ services:
     entrypoint: /user_service_entrypoint.sh
     volumes:
       - ./user_service:/app/user_service
+    healthcheck:
+      test: curl --fail http://localhost:5000/healthcheck || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   video_service:
     build:
@@ -59,9 +78,17 @@ services:
     entrypoint: /video_service_entrypoint.sh
     volumes:
       - ./video_service:/app/video_service
+    healthcheck:
+      test: curl --fail http://localhost:5100/healthcheck || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   statistics_service:
     build:
@@ -72,9 +99,15 @@ services:
     entrypoint: /statistics_service_entrypoint.sh
     volumes:
       - ./statistics_service:/app/statistics_service
+    healthcheck:
+      test: curl --fail http://localhost:5200/healthcheck || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     depends_on:
       mongo:
-        condition: service_started
+        condition: service_healthy
 
   consumer:
     build:
@@ -86,8 +119,6 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
-      statistics_service:
-        condition: service_started
 
 volumes:
   postgres:
