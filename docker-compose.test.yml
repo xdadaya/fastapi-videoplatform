@@ -5,13 +5,13 @@ services:
   db:
     container_name: db_videoplatform
     image: postgres:latest
+    volumes:
+      - postgres:/data/postgres
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: fastapi_users_test, fastapi_videos_test
       PGDATA: /data/postgresc
-    volumes:
-      - postgres:/data/postgres
     ports:
       - "5432:5432"
     restart: always
@@ -27,7 +27,8 @@ services:
       dockerfile: user_service/Dockerfile
     ports:
       - "5000:5000"
-    command: ["pytest"]
+    env_file:
+      - ./user_service/.env.test
     volumes:
       - ./user_service:/app/user_service
     depends_on:
@@ -40,7 +41,8 @@ services:
       dockerfile: video_service/Dockerfile
     ports:
       - "5100:5100"
-    command: ["pytest"]
+    env_file:
+      - ./video_service/.env.test
     volumes:
       - ./video_service:/app/video_service
     depends_on:
