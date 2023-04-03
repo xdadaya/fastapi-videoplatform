@@ -3,10 +3,21 @@ import asyncio
 import pytest
 import pytest_asyncio
 from httpx import AsyncClient
+from typing import Any
 
 from app.main import app
 from app.database.db import create_models, delete_models
 from app.core.config import get_settings
+
+
+async def publish_mock(data: dict[Any, Any], send_method: str) -> None:
+    pass
+
+
+@pytest.fixture(scope="function", autouse=True)
+def mocking_functions(monkeypatch) -> None:
+    monkeypatch.setattr("app.api.auth_service.publish", publish_mock)
+    monkeypatch.setattr("app.api.user_service.publish", publish_mock)
 
 
 @pytest.fixture(scope="session", autouse=True)

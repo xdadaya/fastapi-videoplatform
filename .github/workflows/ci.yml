@@ -1,0 +1,47 @@
+name: CI
+
+on: [push]
+
+env:
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  HASH_ALGORITHM: ${{ secrets.HASH_ALGORITHM }}
+  TOKEN_EXPIRE_MINUTES: ${{ secrets.TOKEN_EXPIRE_MINUTES }}
+  DBMS: ${{ secrets.DBMS }}
+  DB_HOST: ${{ secrets.DB_HOST }}
+  DB_DRIVER: ${{ secrets.DB_DRIVER }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_PORT: ${{ secrets.DB_PORT }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+  AUTHENTICATION_HEADER_PREFIX: ${{ secrets.AUTHENTICATION_HEADER_PREFIX }}
+  AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
+  AWS_S3_REGION: ${{ secrets.AWS_S3_REGION }}
+  RB_HOST: ${{ secrets.RB_HOST }}
+  RB_PORT: ${{ secrets.RB_PORT }}
+  RB_QUEUE_NAME: ${{ secrets.RB_QUEUE_NAME }}
+  RB_USER: ${{ secrets.RB_USER }}
+  RB_PASSWORD: ${{ secrets.RB_PASSWORD }}
+  MAINTAINCE_MODE: ${{ secrets.MAINTAINCE_MODE }}
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          docker-compose -f docker-compose.test.yml build
+
+      - name: Test users
+        run: |
+          docker-compose -f docker-compose.test.yml run --rm user_service pytest
+
+      - name: Test videos
+        run: |
+          docker-compose -f docker-compose.test.yml run --rm video_service pytest

@@ -18,6 +18,10 @@ def upload_video_mock(video: bytes) -> str:
     return "testurl"
 
 
+def delete_video_mock(file_url: str) -> str:
+    pass
+
+
 async def publish_mock(data: dict[Any, Any], send_method: str) -> None:
     pass
 
@@ -26,6 +30,9 @@ async def publish_mock(data: dict[Any, Any], send_method: str) -> None:
 def mocking_functions(monkeypatch) -> None:
     monkeypatch.setattr(
         "app.services.s3_service.S3Service.upload_video", upload_video_mock
+    )
+    monkeypatch.setattr(
+        "app.services.s3_service.S3Service.delete_video", delete_video_mock
     )
     monkeypatch.setattr("app.api.video.service.publish", publish_mock)
     monkeypatch.setattr("app.api.comment.service.publish", publish_mock)
