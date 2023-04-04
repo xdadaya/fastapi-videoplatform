@@ -1,6 +1,6 @@
 from passlib.context import CryptContext
 from app.core.crud.user_crud import UserCRUD
-from app.core.fastapi.exceptions import (
+from shared.fastapi.exceptions import (
     PasswordDoNotMatchException,
     DuplicatedUserException,
     NotFoundException,

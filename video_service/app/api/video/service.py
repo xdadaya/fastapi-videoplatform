@@ -16,7 +16,7 @@ from app.core.crud.comment_crud import CommentCRUD
 from app.core.crud.comment_reaction_crud import CommentReactionCRUD
 from app.core.schemas.update_statistics_schema import UpdateSchema
 from app.services.s3_service import S3Service
-from app.core.fastapi.exceptions.exc import NotVideoException
+from shared.fastapi.exceptions.exc import NotVideoException
 from app.producer import publish
 
 

@@ -1,6 +1,6 @@
 from sqlalchemy import select
 
-from app.core.crud.mixins.base_mixin import BaseMixin, TableType
+from shared.crud.mixins.base_mixin import BaseMixin, TableType
 from app.database.db import session
 
 

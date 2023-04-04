@@ -14,7 +14,8 @@ from app.api.comment.schemas import (
 )
 from app.api.video.service import VideoService
 from app.api.comment.service import CommentService
-from app.core.fastapi.middleware.middleware import verify_token, is_video_owner
+from shared.fastapi.middleware.middleware import verify_token
+from app.core.fastapi.middleware.middleware import is_video_owner
 
 
 api = APIRouter(

@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from starlette.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_401_UNAUTHORIZED,
+    HTTP_403_FORBIDDEN,
     HTTP_404_NOT_FOUND,
 )
 
@@ -34,3 +35,12 @@ class PasswordDoNotMatchException(BaseHTTPException):
 
 class InvalidCredentialsException(BaseHTTPException):
     detail = "Invalid credentials"
+
+
+class NotOwnerException(BaseHTTPException):
+    status_code = HTTP_403_FORBIDDEN
+    detail = "Forbidden"
+
+
+class NotVideoException(BaseHTTPException):
+    detail = "This file is not a video"

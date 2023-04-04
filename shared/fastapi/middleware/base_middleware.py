@@ -1,7 +1,7 @@
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.fastapi.middleware.sqlalchemy import SQLAlchemyMiddleware
+from shared.fastapi.middleware.sqlalchemy import SQLAlchemyMiddleware
 
 
 def make_middleware() -> list[Middleware]:

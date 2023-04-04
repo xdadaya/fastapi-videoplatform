@@ -1,10 +1,12 @@
-from app.core.fastapi.exceptions.exc import (
+from shared.fastapi.exceptions.exc import (
     InvalidCredentialsException,
     PasswordDoNotMatchException,
     DuplicatedUserException,
     NotFoundException,
     UnauthorizedException,
     BaseHTTPException,
+    NotVideoException,
+    NotOwnerException,
 )
 
 __all__ = [
@@ -14,4 +16,6 @@ __all__ = [
     "NotFoundException",
     "UnauthorizedException",
     "BaseHTTPException",
+    "NotVideoException",
+    "NotOwnerException",
 ]

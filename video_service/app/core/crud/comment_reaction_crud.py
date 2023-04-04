@@ -1,4 +1,4 @@
-from app.core.crud.base_crud import BaseCRUD
+from shared.crud.base_crud import BaseCRUD
 from app.database.models.comment_reaction import CommentReaction
 from app.database.sessions import Propagation, Transactional
 from app.database.db import session

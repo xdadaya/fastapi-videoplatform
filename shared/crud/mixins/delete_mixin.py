@@ -1,7 +1,7 @@
 from sqlalchemy import update
 from uuid import UUID
 
-from app.core.crud.mixins.base_mixin import BaseMixin
+from shared.crud.mixins.base_mixin import BaseMixin
 from app.database.db import session
 from app.database.sessions import Propagation, Transactional
 

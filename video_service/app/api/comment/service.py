@@ -14,7 +14,7 @@ from app.core.crud.video_crud import VideoCRUD
 from app.core.crud.comment_reaction_crud import CommentReactionCRUD
 from app.core.schemas.update_statistics_schema import UpdateSchema
 from app.database.models.enums.reaction_type_enum import ReactionType
-from app.core.fastapi.exceptions import NotFoundException
+from shared.fastapi.exceptions import NotFoundException
 from app.producer import publish
 
 
