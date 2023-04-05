@@ -2,19 +2,37 @@ version: "3"
 
 
 services:
-  db:
-    container_name: db_videoplatform
+  db_users:
+    container_name: db_fastapi_users
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: testtesttest
+      POSTGRES_DB: fastapi_users
       PGDATA: /data/postgresc
     volumes:
-      - postgres:/data/postgres
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_users:/data/postgres
     ports:
       - "5432:5432"
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  db_videos:
+    container_name: db_fastapi_videos
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fastapi_videos
+      PGDATA: /data/postgresc
+    volumes:
+      - postgres_videos:/data/postgres
+    ports:
+      - "5433:5432"
     restart: always
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready" ]
@@ -57,7 +75,8 @@ services:
       - "5000:5000"
     entrypoint: /user_service_entrypoint.sh
     volumes:
-      - ./user_service:/app/user_service
+      - ./user_service:/app
+      - ./shared:/app/shared
     healthcheck:
       test: curl --fail http://localhost:5000/healthcheck || exit 1
       interval: 10s
@@ -65,7 +84,7 @@ services:
       retries: 3
       start_period: 30s
     depends_on:
-      db:
+      db_users:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
@@ -78,7 +97,8 @@ services:
       - "5100:5100"
     entrypoint: /video_service_entrypoint.sh
     volumes:
-      - ./video_service:/app/video_service
+      - ./video_service:/app
+      - ./shared:/app/shared
     healthcheck:
       test: curl --fail http://localhost:5100/healthcheck || exit 1
       interval: 10s
@@ -86,7 +106,7 @@ services:
       retries: 3
       start_period: 30s
     depends_on:
-      db:
+      db_videos:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
@@ -122,4 +142,6 @@ services:
         condition: service_healthy
 
 volumes:
-  postgres:
+  postgres_users:
+
+  postgres_videos:

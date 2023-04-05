@@ -10,7 +10,7 @@ from app.core.schemas.auth_schema import (
     RefreshTokenRequest,
 )
 from app.core.schemas.user_schema import UserSerializer
-from app.core.fastapi.middleware.middleware import verify_token
+from shared.fastapi.middleware.middleware import verify_token
 from app.api.auth_service import AuthService
 from app.api.user_service import UserService
 

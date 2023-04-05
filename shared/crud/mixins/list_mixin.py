@@ -2,7 +2,7 @@ from typing import Optional
 
 from sqlalchemy import select, and_, func, desc, text
 
-from app.core.crud.mixins.base_mixin import BaseMixin, TableType
+from shared.crud.mixins.base_mixin import BaseMixin, TableType
 from app.core.schemas.search_schema import SearchSchema
 from app.database.db import session
 

@@ -1,4 +1,4 @@
-from app.core.crud.base_crud import BaseCRUD
+from shared.crud.base_crud import BaseCRUD
 from app.database.models.video import Video
 from app.database.sessions import Propagation, Transactional
 from app.database.db import session

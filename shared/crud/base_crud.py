@@ -1,4 +1,4 @@
-from app.core.crud.mixins import (
+from shared.crud.mixins import (
     CreateMixin,
     DeleteMixin,
     ListMixin,

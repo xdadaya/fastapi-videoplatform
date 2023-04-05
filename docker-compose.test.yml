@@ -2,18 +2,37 @@ version: "3"
 
 
 services:
-  db:
-    container_name: db_videoplatform
+  db_users:
+    container_name: db_fastapi_users
     image: postgres:latest
-    volumes:
-      - postgres:/data/postgres
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fastapi_users_test
       PGDATA: /data/postgresc
+    volumes:
+      - postgres_users:/data/postgres
     ports:
       - "5432:5432"
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  db_videos:
+    container_name: db_fastapi_videos
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fastapi_videos_test
+      PGDATA: /data/postgresc
+    volumes:
+      - postgres_videos:/data/postgres
+    ports:
+      - "5433:5432"
     restart: always
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready" ]
@@ -30,9 +49,10 @@ services:
     env_file:
       - ./user_service/.env.test
     volumes:
-      - ./user_service:/app/user_service
+      - ./user_service:/app
+      - ./shared:/app/shared
     depends_on:
-      db:
+      db_users:
         condition: service_healthy
 
   video_service:
@@ -44,10 +64,13 @@ services:
     env_file:
       - ./video_service/.env.test
     volumes:
-      - ./video_service:/app/video_service
+      - ./video_service:/app
+      - ./shared:/app/shared
     depends_on:
-      db:
+      db_videos:
         condition: service_healthy
 
 volumes:
-  postgres:
+  postgres_users:
+
+  postgres_videos:

@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends
 
 from app.api.comment.schemas import CommentCreateRequest, CommentSerializer
 from app.api.comment.service import CommentService
-from app.core.fastapi.middleware.middleware import verify_token, is_comment_owner
+from shared.fastapi.middleware.middleware import verify_token
+from app.core.fastapi.middleware.middleware import is_comment_owner
 
 api = APIRouter(
     prefix="/comments",

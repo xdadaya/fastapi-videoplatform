@@ -55,6 +55,7 @@ async def check_db() -> bool:
             password=settings.DB_PASSWORD,
             database=settings.DB_NAME,
             host=settings.DB_HOST,
+            port=settings.DB_PORT,
         )
         await conn.close()
         return True
