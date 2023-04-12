@@ -9,8 +9,8 @@ class S3Service:
     settings = get_settings()
 
     @classmethod
-    def upload_video(cls, video: bytes) -> str:
-        file_key = str(uuid4()) + ".mp4"
+    def upload_file(cls, video: bytes, file_extension: str) -> str:
+        file_key = str(uuid4()) + file_extension
         session = boto3.session.Session(
             aws_access_key_id=cls.settings.AWS_ACCESS_KEY,
             aws_secret_access_key=cls.settings.AWS_SECRET_ACCESS_KEY,
@@ -21,7 +21,7 @@ class S3Service:
         return url
 
     @classmethod
-    def delete_video(cls, file_url: str) -> None:
+    def delete_file(cls, file_url: str) -> None:
         session = boto3.session.Session(
             aws_access_key_id=cls.settings.AWS_ACCESS_KEY,
             aws_secret_access_key=cls.settings.AWS_SECRET_ACCESS_KEY,

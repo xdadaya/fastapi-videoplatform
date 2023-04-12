@@ -1,6 +1,8 @@
 from math import ceil
 from typing import List
 from uuid import UUID, uuid4
+import cv2
+import os
 
 from app.api.video.schemas import (
     VideoSerializer,
@@ -16,7 +18,7 @@ from app.core.crud.comment_crud import CommentCRUD
 from app.core.crud.comment_reaction_crud import CommentReactionCRUD
 from app.core.schemas.update_statistics_schema import UpdateSchema
 from app.services.s3_service import S3Service
-from shared.fastapi.exceptions.exc import NotVideoException
+from shared.fastapi.exceptions.exc import NotVideoException, FrameUploadException
 from app.producer import publish
 
 
@@ -44,15 +46,36 @@ class VideoService:
     ) -> VideoSerializer:
         if not video_data.video.filename.endswith(".mp4"):
             raise NotVideoException()
-        video_bytes = await video_data.video.read()
-        video_url = S3Service.upload_video(video_bytes)
+
         video_id = uuid4()
+        video_bytes = await video_data.video.read()
+        with open(f"{video_id}.mp4", "wb") as out_file:
+            out_file.write(video_bytes)
+
+        vidcap = cv2.VideoCapture(f"{video_id}.mp4")
+        frame_count = vidcap.get(cv2.CAP_PROP_FRAME_COUNT)
+        fps = vidcap.get(cv2.CAP_PROP_FPS)
+        video_length = round(frame_count / fps)
+        success, image = vidcap.read()
+        if not success:
+            raise FrameUploadException
+        is_success, im_buf_arr = cv2.imencode(".jpg", image)
+        if not is_success:
+            raise FrameUploadException
+        byte_im = im_buf_arr.tobytes()
+        first_frame_url = S3Service.upload_file(byte_im, ".jpg")
+
+        os.remove(f"{video_id}.mp4")
+
+        video_url = S3Service.upload_file(video_bytes, ".mp4")
         category = await CategoryCRUD.get_or_create(name=video_data.category)
         video = VideoCreateSchema(
             id=video_id,
             title=video_data.title,
             description=video_data.description,
             video_url=video_url,
+            first_frame_url=first_frame_url,
+            video_length=video_length,
             owner_id=user_id,
             category_id=category.id,
         )
@@ -73,7 +96,8 @@ class VideoService:
     @staticmethod
     async def delete(video_id: UUID) -> None:
         video = await VideoCRUD.retrieve(id=video_id)
-        S3Service.delete_video(video.video_url)
+        S3Service.delete_file(video.video_url)
+        S3Service.delete_file(video.first_frame_url)
         user_id = video.owner_id
         comments_amount_by_video_id = await CommentCRUD.count_query(video_id=video_id)
         comments_amount, total_text_length, total_rating = 0, 0, 0
