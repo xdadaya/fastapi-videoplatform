@@ -21,8 +21,8 @@ api = APIRouter(
 )
 
 
-@api.post("/register", response_model=UserSerializer, status_code=201)
-async def register_user(user: UserRegisterRequest) -> UserSerializer:
+@api.post("/register", response_model=TokenSchema, status_code=201)
+async def register_user(user: UserRegisterRequest) -> TokenSchema:
     return await AuthService.register(user)
 
 

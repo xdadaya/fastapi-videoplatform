@@ -13,7 +13,6 @@ from app.core.schemas.auth_schema import (
     TokenSchema,
     RefreshTokenRequest,
 )
-from app.core.schemas.user_schema import UserSerializer
 from app.services.token_service import TokenService
 from app.producer import publish
 
@@ -22,7 +21,7 @@ class AuthService:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     @classmethod
-    async def register(cls, user: UserRegisterRequest) -> UserSerializer:
+    async def register(cls, user: UserRegisterRequest) -> TokenSchema:
         if user.password != user.repeat_password:
             raise PasswordDoNotMatchException()
         try:
@@ -36,7 +35,8 @@ class AuthService:
             user = await UserCRUD.retrieve(username=user.username)
             data = {"user_id": str(user.id)}
             await publish(send_method="create_stats", data=data)
-            return user
+            access_token, refresh_token = TokenService.generate_token(user.id)
+            return TokenSchema(access_token=access_token, refresh_token=refresh_token)
 
     @classmethod
     async def login(cls, user: UserLoginRequest) -> TokenSchema:

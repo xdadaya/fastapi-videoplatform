@@ -44,3 +44,7 @@ class NotOwnerException(BaseHTTPException):
 
 class NotVideoException(BaseHTTPException):
     detail = "This file is not a video"
+
+
+class FrameUploadException(BaseHTTPException):
+    detail = "Something went wrong with uploading video. Try again"

@@ -14,11 +14,11 @@ from app.services.token_service import TokenService
 settings = get_settings()
 
 
-def upload_video_mock(video: bytes) -> str:
+def upload_file_mock(video: bytes) -> str:
     return "testurl"
 
 
-def delete_video_mock(file_url: str) -> str:
+def delete_file_mock(file_url: str) -> str:
     pass
 
 
@@ -29,10 +29,10 @@ async def publish_mock(data: dict[Any, Any], send_method: str) -> None:
 @pytest.fixture(scope="function", autouse=True)
 def mocking_functions(monkeypatch) -> None:
     monkeypatch.setattr(
-        "app.services.s3_service.S3Service.upload_video", upload_video_mock
+        "app.services.s3_service.S3Service.upload_file", upload_file_mock
     )
     monkeypatch.setattr(
-        "app.services.s3_service.S3Service.delete_video", delete_video_mock
+        "app.services.s3_service.S3Service.delete_file", delete_file_mock
     )
     monkeypatch.setattr("app.api.video.service.publish", publish_mock)
     monkeypatch.setattr("app.api.comment.service.publish", publish_mock)

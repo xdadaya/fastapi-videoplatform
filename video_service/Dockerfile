@@ -1,5 +1,5 @@
 FROM public.ecr.aws/docker/library/python:3.11
-RUN apt-get update && apt-get install -y dos2unix
+RUN apt-get update && apt-get install -y dos2unix ffmpeg libsm6 libxext6
 WORKDIR /app/
 
 ENV PYTHONUNBUFFERED 1

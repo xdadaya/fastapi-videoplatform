@@ -18,6 +18,7 @@ pytest = "*"
 httpx = "*"
 pytest-asyncio = "*"
 aio-pika = "*"
+opencv-python = "*"
 
 [dev-packages]
 

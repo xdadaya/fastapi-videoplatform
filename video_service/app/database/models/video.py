@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database.db import Base
@@ -14,6 +14,8 @@ class Video(Base, ExtraFields):
     title = Column(String(256))
     description = Column(String(1024))
     video_url = Column(String(2048))
+    first_frame_url = Column(String(2048))
+    video_length = Column(Integer)
     owner_id = Column(UUID(as_uuid=True), nullable=False)
     category_id = Column(
         UUID(as_uuid=True),

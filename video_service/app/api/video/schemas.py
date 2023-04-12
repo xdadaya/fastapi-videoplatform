@@ -37,6 +37,8 @@ class VideoCreateSchema(BaseModel):
     title: str
     description: str
     video_url: str
+    first_frame_url: str
+    video_length: int
     owner_id: UUID
     category_id: UUID
 
@@ -60,6 +62,8 @@ class VideoSerializer(BaseModel):
     title: str
     description: str
     video_url: str
+    first_frame_url: str
+    video_length: int
 
     class Config:
         orm_mode = True
