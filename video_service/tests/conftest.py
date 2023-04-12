@@ -14,7 +14,7 @@ from app.services.token_service import TokenService
 settings = get_settings()
 
 
-def upload_file_mock(video: bytes) -> str:
+def upload_file_mock(video: bytes, file_extension: str) -> str:
     return "testurl"
 
 
