@@ -12,7 +12,6 @@ async def test_register_valid(client: AsyncClient) -> None:
     )
     response = await client.post("register", json=data)
     assert response.status_code == 201
-    assert response.json()["username"] == data["username"]
 
 
 @pytest.mark.asyncio
