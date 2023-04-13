@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from app.database.db_utils import connect, close_connection, check_db
 from app.database.db import get_database
 
@@ -14,6 +15,13 @@ from app.core.middleware.middleware import MaintainceModeMiddleware
 
 app = FastAPI(title="Statistics App")
 app.add_middleware(MaintainceModeMiddleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.add_event_handler("startup", connect)
 app.add_event_handler("shutdown", close_connection)
 
