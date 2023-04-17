@@ -31,11 +31,16 @@ class CommentSerializer(BaseModel):
         orm_mode = True
 
 
+class CommentListSerializer(CommentSerializer):
+    liked: bool
+    disliked: bool
+
+
 class CommentListResponse(BaseModel):
     page_number: int
     page_size: int
     total_pages: int
-    items: list[CommentSerializer]
+    items: list[CommentListSerializer]
 
 
 class ReactionTypeSchema(BaseModel):

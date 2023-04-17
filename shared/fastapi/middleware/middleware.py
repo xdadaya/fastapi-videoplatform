@@ -1,3 +1,4 @@
+from typing import Union
 from uuid import UUID
 
 from fastapi import Request
@@ -34,3 +35,14 @@ async def verify_token(request: Request) -> UUID:
         return user_id
     except KeyError:
         raise InvalidCredentialsException()
+
+
+async def get_user_id(request: Request) -> Union[UUID, None]:
+    authorization = request.headers.get("Authorization")
+    if authorization is None:
+        return None
+    try:
+        user_id = TokenService.verify_token(authorization)
+        return user_id
+    except KeyError:
+        return None

@@ -14,7 +14,7 @@ from app.api.comment.schemas import (
 )
 from app.api.video.service import VideoService
 from app.api.comment.service import CommentService
-from shared.fastapi.middleware.middleware import verify_token
+from shared.fastapi.middleware.middleware import verify_token, get_user_id
 from app.core.fastapi.middleware.middleware import is_video_owner
 
 
@@ -64,6 +64,10 @@ async def create_comment(
 
 @api.get("/{video_id}/comments", response_model=CommentListResponse)
 async def get_comments_by_video_id(
-    video_id: UUID, page: int = 1, limit: int = 10, sort: str = None
+    video_id: UUID,
+    page: int = 1,
+    limit: int = 10,
+    sort: str = None,
+    user_id: UUID = Depends(get_user_id),
 ) -> CommentListResponse:
-    return await CommentService.list_by_video_id(video_id, page, limit, sort)
+    return await CommentService.list_by_video_id(video_id, page, limit, sort, user_id)

@@ -1,3 +1,4 @@
+from typing import Union
 from uuid import UUID, uuid4
 from math import ceil
 
@@ -5,6 +6,7 @@ from app.api.comment.schemas import (
     CommentCreateRequest,
     CommentCreateSchema,
     CommentSerializer,
+    CommentListSerializer,
     ReactionTypeSchema,
     ReactionCreateSchema,
     CommentListResponse,
@@ -42,7 +44,7 @@ class CommentService:
 
     @staticmethod
     async def list_by_video_id(
-        video_id: UUID, page: int, limit: int, sort: str
+        video_id: UUID, page: int, limit: int, sort: str, user_id: Union[UUID, None]
     ) -> CommentListResponse:
         count = await CommentCRUD.count_query(video_id=video_id)
         total_pages = ceil(count / limit)
@@ -52,7 +54,23 @@ class CommentService:
         result = []
         for comment in comments:
             owner_data = await get_user_data(comment.owner_id)
-            result.append(CommentSerializer(owner=owner_data, **vars(comment)))
+            try:
+                status = await CommentReactionCRUD.retrieve(
+                    comment_id=comment.id, owner_id=user_id
+                )
+                is_liked = status.reaction_type == ReactionType.LIKE
+                is_disliked = status.reaction_type == ReactionType.DISLIKE
+            except NotFoundException:
+                is_liked = False
+                is_disliked = False
+            result.append(
+                CommentListSerializer(
+                    owner=owner_data,
+                    liked=is_liked,
+                    disliked=is_disliked,
+                    **vars(comment)
+                )
+            )
         return CommentListResponse(
             page_number=page, page_size=limit, total_pages=total_pages, items=result
         )
