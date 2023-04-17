@@ -6,7 +6,7 @@ from fastapi.responses import PlainTextResponse
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.responses import Response
 
-from shared.fastapi.exceptions import InvalidCredentialsException
+from shared.fastapi.exceptions import InvalidCredentialsException, UnauthorizedException
 from app.services.token_service import TokenService
 from app.core.config import get_settings
 
@@ -29,7 +29,7 @@ class MaintainceModeMiddleware(BaseHTTPMiddleware):
 async def verify_token(request: Request) -> UUID:
     authorization = request.headers.get("Authorization")
     if authorization is None:
-        raise InvalidCredentialsException()
+        raise UnauthorizedException()
     try:
         user_id = TokenService.verify_token(authorization)
         return user_id
