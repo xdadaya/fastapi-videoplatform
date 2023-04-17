@@ -89,7 +89,9 @@ class VideoService:
         await VideoCRUD.create(video)
         data = UpdateSchema(user_id=str(user_id), videos_amount=1)
         await publish(send_method="update_stats", data=data.dict())
-        return await VideoCRUD.retrieve(id=video_id)
+        created_video = await VideoCRUD.retrieve(id=video_id)
+        owner_data = await get_user_data(video.owner_id)
+        return VideoSerializer(owner=owner_data, **vars(created_video))
 
     @staticmethod
     async def update(video_id: UUID, video: VideoUpdateRequest) -> VideoSerializer:
@@ -98,7 +100,9 @@ class VideoService:
             title=video.title, description=video.description, category_id=category.id
         )
         await VideoCRUD.update(id=video_id, input_data=video)
-        return await VideoCRUD.retrieve(id=video_id)
+        created_video = await VideoCRUD.retrieve(id=video_id)
+        owner_data = await get_user_data(created_video.owner_id)
+        return VideoSerializer(owner=owner_data, **vars(created_video))
 
     @staticmethod
     async def delete(video_id: UUID) -> None:

@@ -28,7 +28,7 @@ async def publish_mock(data: dict[Any, Any], send_method: str) -> None:
 
 
 async def get_user_data_mock(user_id: UUID) -> OwnerSerializer:
-    return OwnerSerializer(id=uuid4(), username="test")
+    return OwnerSerializer(id=user_id, username="test")
 
 
 @pytest.fixture(scope="function", autouse=True)

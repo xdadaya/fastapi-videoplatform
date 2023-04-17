@@ -37,7 +37,8 @@ class CommentService:
             total_text_length=len(comment.text),
         )
         await publish(send_method="update_stats", data=data.dict())
-        return comment
+        owner_data = await get_user_data(comment.owner_id)
+        return CommentSerializer(owner=owner_data, **vars(comment))
 
     @staticmethod
     async def list_by_video_id(
@@ -71,7 +72,8 @@ class CommentService:
             total_text_length=new_text_length - old_text_length,
         )
         await publish(send_method="update_stats", data=data.dict())
-        return comment
+        owner_data = await get_user_data(comment.owner_id)
+        return CommentSerializer(owner=owner_data, **vars(comment))
 
     @staticmethod
     async def delete(comment_id: UUID) -> None:
