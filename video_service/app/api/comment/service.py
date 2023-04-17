@@ -80,7 +80,7 @@ class CommentService:
     @staticmethod
     async def update(
         comment_id: UUID, comment_update: CommentCreateRequest
-    ) -> CommentSerializer:
+    ) -> CommentListSerializer:
         comment = await CommentCRUD.retrieve(id=comment_id)
         old_text_length = len(comment.text)
         await CommentCRUD.update(id=comment_id, input_data=comment_update)
