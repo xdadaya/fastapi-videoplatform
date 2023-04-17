@@ -36,6 +36,11 @@ async def get_user_data(user_id: UUID = Depends(verify_token)) -> UserSerializer
     return await UserService.get_user(user_id)
 
 
+@api.get("/user/{user_id}", response_model=UserSerializer)
+async def get_user(user_id: UUID) -> UserSerializer:
+    return await UserService.get_user(user_id)
+
+
 @api.put("/me", response_model=UserSerializer)
 async def update_user_data(
     user: UserSchema, user_id: UUID = Depends(verify_token)

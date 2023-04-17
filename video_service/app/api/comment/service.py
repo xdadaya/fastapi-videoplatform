@@ -16,6 +16,7 @@ from app.core.schemas.update_statistics_schema import UpdateSchema
 from app.database.models.enums.reaction_type_enum import ReactionType
 from shared.fastapi.exceptions import NotFoundException
 from app.producer import publish
+from shared.fastapi.user_data import get_user_data
 
 
 class CommentService:
@@ -44,9 +45,13 @@ class CommentService:
     ) -> CommentListResponse:
         count = await CommentCRUD.count_query(video_id=video_id)
         total_pages = ceil(count / limit)
-        result = await CommentCRUD.list_items_with_pagination(
+        comments = await CommentCRUD.list_items_with_pagination(
             page=page, limit=limit, sort=sort, video_id=video_id
         )
+        result = []
+        for comment in comments:
+            owner_data = await get_user_data(comment.owner_id)
+            result.append(CommentSerializer(owner=owner_data, **vars(comment)))
         return CommentListResponse(
             page_number=page, page_size=limit, total_pages=total_pages, items=result
         )
