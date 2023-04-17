@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 
-from app.api.comment.schemas import CommentCreateRequest, CommentSerializer
+from app.api.comment.schemas import CommentCreateRequest, CommentListSerializer
 from app.api.comment.service import CommentService
 from shared.fastapi.middleware.middleware import verify_token
 from app.core.fastapi.middleware.middleware import is_comment_owner
@@ -14,12 +14,12 @@ api = APIRouter(
 
 @api.put(
     "/{comment_id}",
-    response_model=CommentSerializer,
+    response_model=CommentListSerializer,
     dependencies=[Depends(is_comment_owner)],
 )
 async def update_comment(
     comment_id: UUID, comment: CommentCreateRequest
-) -> CommentSerializer:
+) -> CommentListSerializer:
     return await CommentService.update(comment_id, comment)
 
 

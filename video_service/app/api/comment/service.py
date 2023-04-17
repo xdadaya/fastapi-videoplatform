@@ -40,7 +40,9 @@ class CommentService:
         )
         await publish(send_method="update_stats", data=data.dict())
         owner_data = await get_user_data(comment.owner_id)
-        return CommentSerializer(owner=owner_data, **vars(comment))
+        return CommentListSerializer(
+            owner=owner_data, liked=False, disliked=False, **vars(comment)
+        )
 
     @staticmethod
     async def list_by_video_id(
@@ -91,7 +93,18 @@ class CommentService:
         )
         await publish(send_method="update_stats", data=data.dict())
         owner_data = await get_user_data(comment.owner_id)
-        return CommentSerializer(owner=owner_data, **vars(comment))
+        try:
+            status = await CommentReactionCRUD.retrieve(
+                comment_id=comment.id, owner_id=comment.owner_id
+            )
+            is_liked = status.reaction_type == ReactionType.LIKE
+            is_disliked = status.reaction_type == ReactionType.DISLIKE
+        except NotFoundException:
+            is_liked = False
+            is_disliked = False
+        return CommentListSerializer(
+            owner=owner_data, liked=is_liked, disliked=is_disliked, **vars(comment)
+        )
 
     @staticmethod
     async def delete(comment_id: UUID) -> None:
