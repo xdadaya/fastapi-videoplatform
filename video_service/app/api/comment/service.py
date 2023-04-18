@@ -61,7 +61,7 @@ class CommentService:
                     comment_id=comment.id, owner_id=user_id
                 )
                 is_liked = status.reaction_type == ReactionType.LIKE
-                is_disliked = status.reaction_type == ReactionType.DISLIKE
+                is_disliked = not is_liked
             except NotFoundException:
                 is_liked = False
                 is_disliked = False
@@ -98,7 +98,7 @@ class CommentService:
                 comment_id=comment.id, owner_id=comment.owner_id
             )
             is_liked = status.reaction_type == ReactionType.LIKE
-            is_disliked = status.reaction_type == ReactionType.DISLIKE
+            is_disliked = not is_liked
         except NotFoundException:
             is_liked = False
             is_disliked = False
