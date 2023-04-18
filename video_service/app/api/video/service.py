@@ -20,6 +20,7 @@ from app.core.schemas.update_statistics_schema import UpdateSchema
 from app.services.s3_service import S3Service
 from shared.fastapi.exceptions.exc import NotVideoException, FrameUploadException
 from app.producer import publish
+from shared.fastapi.user_data import get_user_data
 
 
 class VideoService:
@@ -31,14 +32,20 @@ class VideoService:
     async def pagination_list(page: int, limit: int) -> VideoListResponse:
         count = await VideoCRUD.count_query()
         total_pages = ceil(count / limit)
-        result = await VideoCRUD.list_items_with_pagination(page=page, limit=limit)
+        videos = await VideoCRUD.list_items_with_pagination(page=page, limit=limit)
+        result = []
+        for video in videos:
+            owner_data = await get_user_data(video.owner_id)
+            result.append(VideoSerializer(owner=owner_data, **vars(video)))
         return VideoListResponse(
             page_number=page, page_size=limit, total_pages=total_pages, items=result
         )
 
     @staticmethod
     async def retrieve(video_id: UUID) -> VideoSerializer:
-        return await VideoCRUD.retrieve(id=video_id)
+        video = await VideoCRUD.retrieve(id=video_id)
+        owner_data = await get_user_data(video.owner_id)
+        return VideoSerializer(owner=owner_data, **vars(video))
 
     @staticmethod
     async def create(
@@ -82,7 +89,9 @@ class VideoService:
         await VideoCRUD.create(video)
         data = UpdateSchema(user_id=str(user_id), videos_amount=1)
         await publish(send_method="update_stats", data=data.dict())
-        return await VideoCRUD.retrieve(id=video_id)
+        created_video = await VideoCRUD.retrieve(id=video_id)
+        owner_data = await get_user_data(video.owner_id)
+        return VideoSerializer(owner=owner_data, **vars(created_video))
 
     @staticmethod
     async def update(video_id: UUID, video: VideoUpdateRequest) -> VideoSerializer:
@@ -91,7 +100,9 @@ class VideoService:
             title=video.title, description=video.description, category_id=category.id
         )
         await VideoCRUD.update(id=video_id, input_data=video)
-        return await VideoCRUD.retrieve(id=video_id)
+        created_video = await VideoCRUD.retrieve(id=video_id)
+        owner_data = await get_user_data(created_video.owner_id)
+        return VideoSerializer(owner=owner_data, **vars(created_video))
 
     @staticmethod
     async def delete(video_id: UUID) -> None:

@@ -1,7 +1,10 @@
+from datetime import datetime
 from uuid import UUID
 
 from fastapi import File, UploadFile, Form
 from pydantic import BaseModel
+
+from shared.fastapi.user_data import OwnerSerializer
 
 
 class CategoryCreateSchema(BaseModel):
@@ -57,13 +60,15 @@ class VideoUpdateSchema(BaseModel):
 
 class VideoSerializer(BaseModel):
     id: UUID
-    owner_id: UUID
+    owner: OwnerSerializer
     category_id: UUID
     title: str
     description: str
     video_url: str
     first_frame_url: str
     video_length: int
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True
