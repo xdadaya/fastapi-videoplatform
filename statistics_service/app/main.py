@@ -30,11 +30,10 @@ app.add_event_handler("shutdown", close_connection)
 async def index(
     user_id: UUID, db=Depends(get_database)
 ) -> UserStatisticsResponseScheme:
-    result = UserStatisticsBaseScheme(
-        **(await UserStatisticsCRUD.retrieve(db, user_id=user_id))
-    )
+    result = await UserStatisticsCRUD.retrieve(db, user_id=user_id)
     if result is None:
         raise HTTPException(status_code=404, detail="Not found")
+    result = UserStatisticsBaseScheme(**result)
     avg_rating = (
         result.total_rating / result.comments_amount
         if result.comments_amount != 0
